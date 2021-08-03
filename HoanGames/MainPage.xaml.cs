@@ -9,8 +9,6 @@ using HoanGames.Views;
 
 namespace HoanGames
 {
-    // Learn more about making custom code visible in the Xamarin.Forms previewer
-    // by visiting https://aka.ms/xamarinforms-previewer
     [DesignTimeVisible(false)]
     public partial class MainPage : ContentPage
     {
@@ -18,6 +16,7 @@ namespace HoanGames
         {
             InitializeComponent();
 
+            btnChangePlayer.Clicked += (s, e) => Navigation.PushAsync(new PlayerSelectPage());
             btnMinesweeper.Clicked += (s, e) => Navigation.PushAsync(new MinesweeperPage());
         }
     }

@@ -21,7 +21,7 @@ namespace HoanGames.ViewModels
             {
                 _holdingFlag = value;
 
-                FlagCommand.ChangeCanExecute();
+                FlagCommand.ChangeCanExecute(); //disable button until (HoldingFlag == false)
             }
         }
         bool IsBusy { get; set; }
@@ -30,7 +30,7 @@ namespace HoanGames.ViewModels
         int NumOfMines { get; set; } = 8;
         int BoardWidth { get; } = 6;
         int BoardHeight { get; } = 6;
-        List<Cell> Board { get; set; } = new List<Cell>();
+        List<Cell> Board { get; set; }
         Grid grid { get; set; }
         public Command FlagCommand { get; }
         public Command RestartCommand { get; }
@@ -44,56 +44,39 @@ namespace HoanGames.ViewModels
             RestartCommand = new Command(OnRestartGame);
         }
 
+        public void CreateBoard()
+        {
+            int id = 0;
+            Board = new List<Cell>();
+            
+            for (int i = 0; i < BoardWidth; i++)
+            {
+                for (int j = 0; j < BoardHeight; j++)
+                {
+                    //Add Cell object to Board
+                    Board.Add(new Cell(id++, j, i));
+
+                    //Add Button to Grid
+                    Button playerMove;
+                    grid.Children.Add(playerMove = new Button()
+                    {
+                        Padding = 0,
+                    }, j, i);
+                    playerMove.Clicked += OnPlayerMove;
+                }
+            }
+        }
+
         public async void StartGame()
         {
             await Task.Run(new Action(CreateBoard));
         }
-
-        public void CreateBoard()
-        {
-            int id = 0;
-            for (int i = 0; i < BoardWidth; i++)
-            {
-                for (int j = 0; j < BoardHeight; j++)
-                {
-                    //Add Cell object to Board
-                    Board.Add(new Cell(id++, j, i));
-
-                    //Add Button to Grid
-                    Button playerMove;
-                    grid.Children.Add(playerMove = new Button()
-                    {
-                        Padding = 0,
-                    }, j, i);
-                    playerMove.Clicked += OnPlayerMove;
-                }
-            }
-        }
-        public void OnRestartGame()
+        public void OnRestartGame() //Cannot reuse StartGame because new async thread cannot modify the same view
         {
             NumOfMines = 8;
             NumOfMoves = 0;
-            Board = new List<Cell>();
             grid.Children.Clear();
-
-            int id = 0;
-            for (int i = 0; i < BoardWidth; i++)
-            {
-                for (int j = 0; j < BoardHeight; j++)
-                {
-                    //Add Cell object to Board
-                    Board.Add(new Cell(id++, j, i));
-
-                    //Add Button to Grid
-                    Button playerMove;
-                    grid.Children.Add(playerMove = new Button()
-                    {
-                        Padding = 0,
-                    }, j, i);
-                    playerMove.Clicked += OnPlayerMove;
-                }
-            }
-            //btnFlag.IsEnabled = true;
+            CreateBoard();
 
         }
         public void OnPlayerMove(object sender, EventArgs e)
@@ -104,11 +87,11 @@ namespace HoanGames.ViewModels
             Cell playerCell = Board.Find(cell => cell.X == col && cell.Y == row);
 
             if (HoldingFlag)
-            {
+            {   //Place an F on the cell
                 button.Text = "F";
                 button.TextColor = Color.Red;
                 HoldingFlag = false;
-                //btnFlag.IsEnabled = true;
+               
             }
             else
             {
@@ -134,7 +117,9 @@ namespace HoanGames.ViewModels
             }
 
             var AdjacentCells = new List<Cell>();
-            for (int i = playerCell.Y - 1; i <= playerCell.Y + 1; i++) //for loop around the playerCell to collect into a List
+
+            //for loop around the playerCell to collect adjacent cells into a List
+            for (int i = playerCell.Y - 1; i <= playerCell.Y + 1; i++) 
             {
                 for (int j = playerCell.X - 1; j <= playerCell.X + 1; j++)
                 {
@@ -148,25 +133,27 @@ namespace HoanGames.ViewModels
 
                 }
             }
+            //if no adjacent mines, recursively reveal adjacent cells
             if (NumOfAdjacentMines == 0)
             {
                 foreach (Cell cell in AdjacentCells)
                 {
-                    //RemoveCell(cell.X, cell.Y, NumOfAdjacentMines);
                     if (!cell.IsRevealed) RevealCell(cell);
                 }
             }
+            //Replace Button with number of adjacent mines
             RemoveCell(playerCell.X, playerCell.Y, NumOfAdjacentMines);
-
-
+        
         }
+
         void OnFlagClick()
         {
             HoldingFlag = true;
-            //btnFlag.IsEnabled = false;
         }
+
         void GenerateMines(Cell playerCell)
         {
+            //make sure the first cell never has adjacent mines
             var StartingCells = new List<Cell>();
             for (int i = playerCell.X - 1; i <= playerCell.X + 1; i++) //for loop around the playerCell to collect into a List
             {
