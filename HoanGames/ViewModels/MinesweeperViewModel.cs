@@ -9,18 +9,38 @@ namespace HoanGames.ViewModels
 {
     public class MinesweeperViewModel
     {
-        public bool PlayerLost { get; set; }
-        public bool HoldingFlag { get; set; }
-        public int NumOfMoves { get; set; } = 0;
-        public int NumOfMines { get; set; } = 8;
-        public int BoardWidth { get; } = 6;
-        public int BoardHeight { get; } = 6;
-        public List<Cell> Board { get; set; } = new List<Cell>();
-        public Grid grid { get; set; }
+
+        bool _holdingFlag;
+        public bool HoldingFlag 
+        {
+            get
+            {
+                return _holdingFlag;
+            }
+            set
+            {
+                _holdingFlag = value;
+
+                FlagCommand.ChangeCanExecute();
+            }
+        }
+        bool PlayerLost { get; set; }
+        int NumOfMoves { get; set; } = 0;
+        int NumOfMines { get; set; } = 8;
+        int BoardWidth { get; } = 6;
+        int BoardHeight { get; } = 6;
+        List<Cell> Board { get; set; } = new List<Cell>();
+        Grid grid { get; set; }
+        public Command FlagCommand { get; }
+        public Command RestartCommand { get; }
+
 
         public MinesweeperViewModel(Grid gridInput)
         {
             grid = gridInput;
+
+            FlagCommand = new Command(OnFlagClick, () => !HoldingFlag);
+            RestartCommand = new Command(OnRestartGame);
         }
 
         public void StartGame()
@@ -42,9 +62,8 @@ namespace HoanGames.ViewModels
                     playerMove.Clicked += OnPlayerMove;
                 }
             }
-            //btnFlag.IsEnabled = true;
         }
-        public void OnRestartGame(object sender, EventArgs e)
+        public void OnRestartGame()
         {
             NumOfMines = 8;
             NumOfMoves = 0;
@@ -135,12 +154,12 @@ namespace HoanGames.ViewModels
 
 
         }
-        public void OnFlagClick(object sender, EventArgs e)
+        void OnFlagClick()
         {
             HoldingFlag = true;
             //btnFlag.IsEnabled = false;
         }
-        public void GenerateMines(Cell playerCell)
+        void GenerateMines(Cell playerCell)
         {
             var StartingCells = new List<Cell>();
             for (int i = playerCell.X - 1; i <= playerCell.X + 1; i++) //for loop around the playerCell to collect into a List
@@ -226,7 +245,6 @@ namespace HoanGames.ViewModels
         }
         public class Cell
         {
-            public string StateIcon { get; set; } = "██";
             public bool IsRevealed { get; set; }
             public bool IsFlagged { get; set; }
             public bool HasMine { get; set; }

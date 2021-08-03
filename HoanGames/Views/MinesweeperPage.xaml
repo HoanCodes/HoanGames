@@ -10,7 +10,7 @@
         <Button
             x:Name="btnStart"
             Text="Restart"
-            
+            Command="{Binding RestartCommand}"
             />
         <Grid 
             x:Name="grid"
@@ -40,8 +40,8 @@
         <Button
             x:Name="btnFlag"
             Text="Flag"
-            IsEnabled="False"
             VerticalOptions="EndAndExpand"
+            Command="{Binding FlagCommand}"
             />
     </StackLayout>
     
