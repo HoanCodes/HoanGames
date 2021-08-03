@@ -16,18 +16,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Pages\MinesweeperPage.xaml.cs">
+    <Compile Update="Views\MinesweeperPage.xaml.cs">
       <DependentUpon>MinesweeperPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\PlayerSelectPage.xaml.cs">
+      <DependentUpon>PlayerSelectPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Pages\MinesweeperPage.xaml">
+    <EmbeddedResource Update="Views\MinesweeperPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ViewModel\" />
+    <EmbeddedResource Update="Views\PlayerSelectPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

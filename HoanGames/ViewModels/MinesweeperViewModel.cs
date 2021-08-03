@@ -1,23 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace HoanGames.Pages
+namespace HoanGames.ViewModels
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MinesweeperPage : ContentPage
+    public class MinesweeperViewModel
     {
-        public MinesweeperPage()
-        {
-            InitializeComponent();
-            StartGame();
-        }
-        
         public bool PlayerLost { get; set; }
         public bool HoldingFlag { get; set; }
         public int NumOfMoves { get; set; } = 0;
@@ -25,7 +16,13 @@ namespace HoanGames.Pages
         public int BoardWidth { get; } = 6;
         public int BoardHeight { get; } = 6;
         public List<Cell> Board { get; set; } = new List<Cell>();
-        
+        public Grid grid { get; set; }
+
+        public MinesweeperViewModel(Grid gridInput)
+        {
+            grid = gridInput;
+        }
+
         public void StartGame()
         {
             int id = 0;
@@ -45,13 +42,12 @@ namespace HoanGames.Pages
                     playerMove.Clicked += OnPlayerMove;
                 }
             }
-            btnFlag.IsEnabled = true;
+            //btnFlag.IsEnabled = true;
         }
         public void OnRestartGame(object sender, EventArgs e)
         {
             NumOfMines = 8;
             NumOfMoves = 0;
-            IsBusy = true;
             Board = new List<Cell>();
             grid.Children.Clear();
 
@@ -72,10 +68,8 @@ namespace HoanGames.Pages
                     playerMove.Clicked += OnPlayerMove;
                 }
             }
-            
-            btnFlag.IsEnabled = true;
-            IsBusy = false;
-            
+            //btnFlag.IsEnabled = true;
+
         }
         public void OnPlayerMove(object sender, EventArgs e)
         {
@@ -83,13 +77,13 @@ namespace HoanGames.Pages
             var row = Grid.GetRow(button);
             var col = Grid.GetColumn(button);
             Cell playerCell = Board.Find(cell => cell.X == col && cell.Y == row);
-            
+
             if (HoldingFlag)
             {
                 button.Text = "F";
                 button.TextColor = Color.Red;
                 HoldingFlag = false;
-                btnFlag.IsEnabled = true;
+                //btnFlag.IsEnabled = true;
             }
             else
             {
@@ -101,7 +95,7 @@ namespace HoanGames.Pages
         {
             playerCell.IsRevealed = true;
             var NumOfAdjacentMines = 0;
-            
+
             if (NumOfMoves == 0)
             {
                 GenerateMines(playerCell);
@@ -144,7 +138,7 @@ namespace HoanGames.Pages
         public void OnFlagClick(object sender, EventArgs e)
         {
             HoldingFlag = true;
-            btnFlag.IsEnabled = false;
+            //btnFlag.IsEnabled = false;
         }
         public void GenerateMines(Cell playerCell)
         {
@@ -199,15 +193,15 @@ namespace HoanGames.Pages
                             FontSize = 20,
                         }, col, row);
                     }
-                    
+
                 }
             }
         }
-        
+
         public void GameOver()
         {
             PlayerLost = true;
-            btnFlag.IsEnabled = false;
+            //btnFlag.IsEnabled = false;
 
             for (int index = grid.Children.Count - 1; index >= 0; index--)
             {
@@ -225,8 +219,8 @@ namespace HoanGames.Pages
                         VerticalOptions = LayoutOptions.Center,
                         FontSize = 20,
                     }, col, row);
-                    
-                    
+
+
                 }
             }
         }
@@ -250,40 +244,3 @@ namespace HoanGames.Pages
         }
     }
 }
-
-//C# for adding Grid if need be
-/*
- 
-            var button = (Button)sender;
-            var row = Grid.GetRow(button);
-            var grid = button.Parent as Grid;
-            //assuming the image is in column 1
-            var image = grid.Children.Where(c => Grid.GetRow(c) == row && Grid.GetColumn(c)==1);
-
-
-            Grid grid = new Grid
-            {
-                RowDefinitions =
-                {
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                },
-                ColumnDefinitions =
-                {
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                }
-            };
-            */

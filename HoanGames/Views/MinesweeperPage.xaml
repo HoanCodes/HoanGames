@@ -4,13 +4,13 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="HoanGames.Pages.MinesweeperPage"
+             x:Class="HoanGames.Views.MinesweeperPage"
              Padding="20">
     <StackLayout>
         <Button
             x:Name="btnStart"
             Text="Restart"
-            Clicked="OnRestartGame"
+            
             />
         <Grid 
             x:Name="grid"
@@ -42,8 +42,12 @@
             Text="Flag"
             IsEnabled="False"
             VerticalOptions="EndAndExpand"
-            Clicked="OnFlagClick"
             />
     </StackLayout>
     
 </ContentPage>
+
+<!--
+    Clicked="{Binding OnRestartGame}"
+    Clicked="OnFlagClick"
+    -->
