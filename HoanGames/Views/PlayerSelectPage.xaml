@@ -4,12 +4,38 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="HoanGames.Views.PlayerSelectPage">
+             x:Class="HoanGames.Views.PlayerSelectPage"
+             Title="Change Player">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Choose The Player!"
-                VerticalOptions="Start" 
-                HorizontalOptions="CenterAndExpand" />
+            
+            <StackLayout Padding="30">
+                <Entry
+                    Placeholder="Add Your Name!"
+                    />
+            </StackLayout>
+            
+            <ListView ItemsSource="{Binding PlayerList}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell Height="30">
+                            <StackLayout Orientation="Horizontal">
+                                <Label 
+                                    Padding="10"
+                                    FontSize="20"
+                                    VerticalOptions="Center"
+                                    Text="{Binding Name}"
+                                    />
+                                <Button 
+                                    Text="Delete"
+                                    HorizontalOptions="EndAndExpand"
+                                    />
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

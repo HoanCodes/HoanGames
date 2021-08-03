@@ -6,7 +6,7 @@ using SQLite;
 namespace HoanGames.Models
 {
     [Table("players")]
-    class Player
+    public class Player
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }

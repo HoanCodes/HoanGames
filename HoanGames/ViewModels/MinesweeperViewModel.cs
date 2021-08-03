@@ -28,7 +28,7 @@ namespace HoanGames.ViewModels
         bool PlayerLost { get; set; }
         int NumOfMoves { get; set; } = 0;
         int NumOfMines { get; set; } = 8;
-        int BoardWidth { get; } = 4;
+        int BoardWidth { get; } = 3;
         int BoardHeight { get; } = 4;
         List<Cell> Board { get; set; }
         Grid grid { get; set; }

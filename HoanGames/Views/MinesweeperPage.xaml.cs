@@ -23,8 +23,6 @@ namespace HoanGames.Views
             BindingContext = Game;
             Game.StartGame();
         }
-        
-        
     }
 }
 

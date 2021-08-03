@@ -5,7 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="HoanGames.Views.MinesweeperPage"
-             Padding="20">
+             Padding="20"
+             Title="Minesweeper">
     <StackLayout>
         <Button
             x:Name="btnStart"

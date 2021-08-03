@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
+using HoanGames.ViewModels;
+
 namespace HoanGames.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -15,6 +17,7 @@ namespace HoanGames.Views
         public PlayerSelectPage()
         {
             InitializeComponent();
+            BindingContext = new PlayerSelectViewModel();
         }
     }
 }
