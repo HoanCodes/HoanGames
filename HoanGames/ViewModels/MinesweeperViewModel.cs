@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -24,6 +24,7 @@ namespace HoanGames.ViewModels
                 FlagCommand.ChangeCanExecute();
             }
         }
+        bool IsBusy { get; set; }
         bool PlayerLost { get; set; }
         int NumOfMoves { get; set; } = 0;
         int NumOfMines { get; set; } = 8;
@@ -43,7 +44,12 @@ namespace HoanGames.ViewModels
             RestartCommand = new Command(OnRestartGame);
         }
 
-        public void StartGame()
+        public async void StartGame()
+        {
+            await Task.Run(new Action(CreateBoard));
+        }
+
+        public void CreateBoard()
         {
             int id = 0;
             for (int i = 0; i < BoardWidth; i++)
