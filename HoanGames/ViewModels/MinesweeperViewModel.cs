@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using HoanGames;
 
 namespace HoanGames.ViewModels
 {
@@ -25,21 +26,21 @@ namespace HoanGames.ViewModels
             }
         }
         bool IsBusy { get; set; }
-        bool PlayerLost { get; set; }
+        bool GameFinished { get; set; }
         int NumOfMoves { get; set; } = 0;
-        int NumOfMines { get; set; } = 8;
-        int BoardWidth { get; } = 3;
-        int BoardHeight { get; } = 4;
+        int NumOfMines { get; set; } = 4;
+        int BoardWidth { get; } = 6;
+        int BoardHeight { get; } = 6;
         List<Cell> Board { get; set; }
         Grid grid { get; set; }
         public Command FlagCommand { get; }
         public Command RestartCommand { get; }
 
+        public event EventHandler<EventArgs> GameWon;
 
         public MinesweeperViewModel(Grid gridInput)
         {
             grid = gridInput;
-
             FlagCommand = new Command(OnFlagClick, () => !HoldingFlag);
             RestartCommand = new Command(OnRestartGame);
         }
@@ -47,6 +48,7 @@ namespace HoanGames.ViewModels
         public void CreateBoard()
         {
             int id = 0;
+            grid.IsEnabled = true;
             Board = new List<Cell>();
             
             for (int i = 0; i < BoardWidth; i++)
@@ -66,18 +68,16 @@ namespace HoanGames.ViewModels
                 }
             }
         }
-
         public async void StartGame()
         {
             await Task.Run(new Action(CreateBoard));
         }
         public void OnRestartGame() //Cannot reuse StartGame because new async thread cannot modify the same view
         {
-            NumOfMines = 8;
+            GameFinished = false;
             NumOfMoves = 0;
             grid.Children.Clear();
             CreateBoard();
-
         }
         public void OnPlayerMove(object sender, EventArgs e)
         {
@@ -107,8 +107,8 @@ namespace HoanGames.ViewModels
             if (NumOfMoves == 0)
             {
                 GenerateMines(playerCell);
-                NumOfMoves++;
             }
+            NumOfMoves++;
 
             if (playerCell.HasMine)
             {
@@ -138,12 +138,20 @@ namespace HoanGames.ViewModels
             {
                 foreach (Cell cell in AdjacentCells)
                 {
-                    if (!cell.IsRevealed) RevealCell(cell);
+                    if (!cell.IsRevealed && !GameFinished) RevealCell(cell);
                 }
             }
+
             //Replace Button with number of adjacent mines
             RemoveCell(playerCell.X, playerCell.Y, NumOfAdjacentMines);
-        
+
+            
+
+            if (NumOfMoves == BoardWidth * BoardHeight - NumOfMines)
+            {
+                OnGameWon();
+                return;
+            }
         }
 
         void OnFlagClick()
@@ -160,18 +168,17 @@ namespace HoanGames.ViewModels
                 for (int j = playerCell.Y - 1; j <= playerCell.Y + 1; j++)
                 {
                     Cell cellFound = Board.Find(x => x.X == i && x.Y == j);
-
                     StartingCells.Add(cellFound);
                 }
             }
 
             if (NumOfMines > BoardHeight * BoardWidth - 9) NumOfMines = BoardHeight * BoardWidth - 9;
-
-            while (NumOfMines > 0)
+            var mines = NumOfMines;
+            while (mines > 0)
             {
                 foreach (Cell cell in Board)
                 {
-                    if (NumOfMines <= 0)
+                    if (mines <= 0)
                     {
                         break;
                     }
@@ -182,7 +189,7 @@ namespace HoanGames.ViewModels
                         if (rand.Next(101) < 20) //20% chance for each cell to have a mine
                         {
                             cell.HasMine = true;
-                            NumOfMines--;
+                            mines--;
                         }
                     }
                 }
@@ -214,8 +221,8 @@ namespace HoanGames.ViewModels
 
         public void GameOver()
         {
-            PlayerLost = true;
-            //btnFlag.IsEnabled = false;
+            GameFinished = true;
+            grid.IsEnabled = false;
 
             for (int index = grid.Children.Count - 1; index >= 0; index--)
             {
@@ -233,10 +240,18 @@ namespace HoanGames.ViewModels
                         VerticalOptions = LayoutOptions.Center,
                         FontSize = 20,
                     }, col, row);
-
-
                 }
             }
+        }
+        protected virtual void OnGameWon()
+        {
+            if (!GameFinished)
+            {
+                GameFinished = true;
+                grid.IsEnabled = false;
+                GameWon?.Invoke(this, EventArgs.Empty);
+            }
+            
         }
         public class Cell
         {

@@ -8,9 +8,7 @@
              Title="Change Player">
     <ContentPage.Content>
         <StackLayout>
-
             <StackLayout Padding="30" Orientation="Horizontal">
-                <Label Text="{Binding NameEntry}"/>
                 <Entry
                     Text="{Binding NameEntry}"
                     Placeholder="Add Your Name!"
@@ -26,7 +24,9 @@
             <ListView ItemsSource="{Binding PlayerList}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <ViewCell Height="30">
+                        <ViewCell 
+                            Height="30" 
+                            >
                             <StackLayout Orientation="Horizontal">
                                 <Label 
                                     Padding="10"
@@ -35,8 +35,12 @@
                                     Text="{Binding Name}"
                                     />
                                 <Button 
-                                    Text="Delete"
+                                    Text="Select"
                                     HorizontalOptions="EndAndExpand"
+                                    />
+                                <Button 
+                                    Text="Delete"
+                                    HorizontalOptions="End"
                                     />
                             </StackLayout>
                         </ViewCell>

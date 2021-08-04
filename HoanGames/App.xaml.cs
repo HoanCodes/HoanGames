@@ -11,6 +11,7 @@ namespace HoanGames
     {
         string dbPath => FileAccessHelper.GetLocalFilePath("people.db3");
         public static PlayerRepository PlayerRepo { get; private set; }
+        public NavigationPage Nav { get; set; }
 
         public App()
         {
@@ -18,9 +19,9 @@ namespace HoanGames
 
             PlayerRepo = new PlayerRepository(dbPath);
 
-            var nav = new NavigationPage(new MainPage());
+            Nav = new NavigationPage(new MainPage());
 
-            MainPage = nav;
+            MainPage = Nav;
         }
 
         protected override void OnStart()
