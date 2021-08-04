@@ -29,10 +29,10 @@ namespace HoanGames.ViewModels
         bool GameFinished { get; set; }
         int NumOfMoves { get; set; } = 0;
         int NumOfMines { get; set; } = 4;
-        int BoardWidth { get; } = 6;
-        int BoardHeight { get; } = 6;
+        int BoardWidth { get; } = 10;
+        int BoardHeight { get; } = 10;
         List<Cell> Board { get; set; }
-        Grid grid { get; set; }
+        Grid BoardGrid { get; set; }
         public Command FlagCommand { get; }
         public Command RestartCommand { get; }
 
@@ -40,7 +40,7 @@ namespace HoanGames.ViewModels
 
         public MinesweeperViewModel(Grid gridInput)
         {
-            grid = gridInput;
+            BoardGrid = gridInput;
             FlagCommand = new Command(OnFlagClick, () => !HoldingFlag);
             RestartCommand = new Command(OnRestartGame);
         }
@@ -48,7 +48,7 @@ namespace HoanGames.ViewModels
         public void CreateBoard()
         {
             int id = 0;
-            grid.IsEnabled = true;
+            BoardGrid.IsEnabled = true;
             Board = new List<Cell>();
             
             for (int i = 0; i < BoardWidth; i++)
@@ -60,13 +60,47 @@ namespace HoanGames.ViewModels
 
                     //Add Button to Grid
                     Button playerMove;
-                    grid.Children.Add(playerMove = new Button()
+                    BoardGrid.Children.Add(playerMove = new Button()
                     {
                         Padding = 0,
                     }, j, i);
                     playerMove.Clicked += OnPlayerMove;
                 }
             }
+        }
+
+        public void CreateGrid()
+        {
+            BoardGrid = new Grid
+            {
+                RowDefinitions =
+                {
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                },
+                ColumnDefinitions =
+                {
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+
+                }
+            };
         }
         public async void StartGame()
         {
@@ -76,7 +110,7 @@ namespace HoanGames.ViewModels
         {
             GameFinished = false;
             NumOfMoves = 0;
-            grid.Children.Clear();
+            BoardGrid.Children.Clear();
             CreateBoard();
         }
         public void OnPlayerMove(object sender, EventArgs e)
@@ -145,7 +179,6 @@ namespace HoanGames.ViewModels
             //Replace Button with number of adjacent mines
             RemoveCell(playerCell.X, playerCell.Y, NumOfAdjacentMines);
 
-            
 
             if (NumOfMoves == BoardWidth * BoardHeight - NumOfMines)
             {
@@ -198,21 +231,25 @@ namespace HoanGames.ViewModels
 
         public void RemoveCell(int col, int row, int numOfAdjacentMines)
         {
-            for (int index = grid.Children.Count - 1; index >= 0; index--)
+            for (int index = BoardGrid.Children.Count - 1; index >= 0; index--)
             {
-                if (Grid.GetRow(grid.Children[index]) == row && Grid.GetColumn(grid.Children[index]) == col)
+                if (Grid.GetRow(BoardGrid.Children[index]) == row && Grid.GetColumn(BoardGrid.Children[index]) == col)
                 {
-                    grid.Children.RemoveAt(index);
+                    BoardGrid.Children.RemoveAt(index);
 
                     if (numOfAdjacentMines > 0)
                     {
-                        grid.Children.Add(new Label
+                        BoardGrid.Children.Add(new Label
                         {
                             Text = Convert.ToString(numOfAdjacentMines),
                             HorizontalOptions = LayoutOptions.Center,
                             VerticalOptions = LayoutOptions.Center,
                             FontSize = 20,
                         }, col, row);
+                    }
+                    else
+                    {
+                        BoardGrid.Children.Add(new Label(), col, row);
                     }
 
                 }
@@ -222,17 +259,17 @@ namespace HoanGames.ViewModels
         public void GameOver()
         {
             GameFinished = true;
-            grid.IsEnabled = false;
+            BoardGrid.IsEnabled = false;
 
-            for (int index = grid.Children.Count - 1; index >= 0; index--)
+            for (int index = BoardGrid.Children.Count - 1; index >= 0; index--)
             {
-                var row = Grid.GetRow(grid.Children[index]);
-                var col = Grid.GetColumn(grid.Children[index]);
+                var row = Grid.GetRow(BoardGrid.Children[index]);
+                var col = Grid.GetColumn(BoardGrid.Children[index]);
                 Cell playerCell = Board.Find(cell => cell.X == col && cell.Y == row);
                 if (playerCell.HasMine)
                 {
-                    grid.Children.RemoveAt(index);
-                    grid.Children.Add(new Label
+                    BoardGrid.Children.RemoveAt(index);
+                    BoardGrid.Children.Add(new Label
                     {
                         Text = "M",
                         TextColor = Color.Orange,
@@ -248,7 +285,7 @@ namespace HoanGames.ViewModels
             if (!GameFinished)
             {
                 GameFinished = true;
-                grid.IsEnabled = false;
+                BoardGrid.IsEnabled = false;
                 GameWon?.Invoke(this, EventArgs.Empty);
             }
             

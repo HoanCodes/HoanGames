@@ -17,31 +17,15 @@
             x:Name="grid"
             RowSpacing="0"
             ColumnSpacing="0"
+            VerticalOptions="FillAndExpand"
             >
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                
-            </Grid.ColumnDefinitions>
+            
         </Grid>
         
         <Button
             x:Name="btnFlag"
             Text="Flag"
-            VerticalOptions="EndAndExpand"
+            VerticalOptions="End"
             Command="{Binding FlagCommand}"
             />
     </StackLayout>

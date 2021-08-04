@@ -21,6 +21,7 @@ namespace HoanGames.Views
 
             var Game = new MinesweeperViewModel(grid);
             BindingContext = Game;
+            Game.CreateBoard();
             Game.StartGame();
             Game.GameWon += WinSubsciber;
         }
