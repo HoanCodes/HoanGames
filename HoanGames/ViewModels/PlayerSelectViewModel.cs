@@ -1,39 +1,65 @@
-﻿using System;
+﻿using HoanGames.Models;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
 using Xamarin.Forms;
 
-using HoanGames.Models;
-
 namespace HoanGames.ViewModels
 {
-    public class PlayerSelectViewModel
+    public class PlayerSelectViewModel : INotifyPropertyChanged
     {
-        public string Name { get; set; }
-        public string Entry { get; }
-        public List<Player> PlayerList { get; set; } = new List<Player>();
+        string _nameEntry;
+        List<Player> _playerList;
+        public string NameEntry 
+        {
+            get 
+            {
+                return _nameEntry;
+            }
+            set
+            {
+                _nameEntry = value;
 
-        public Command AddPlayerCommand;
+                OnPropertyChanged(nameof(NameEntry));
+            }
+        }
+        public List<Player> PlayerList 
+        {
+            get
+            {
+                return _playerList;
+            }
+            set
+            {
+                _playerList = value;
 
+                OnPropertyChanged(nameof(PlayerList));
+            }
+        }
+
+        public Command AddPlayerCommand { get; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(string name)
+        {
+            if (PropertyChanged != null) PropertyChanged.Invoke(this, new PropertyChangedEventArgs(name));
+        }
         public PlayerSelectViewModel()
         {
             AddPlayerCommand = new Command(OnAddPlayer);
+
+            PlayerList = new List<Player>();
             GetPlayersList();
         }
 
-        public void OnAddPlayer()
+        public async void OnAddPlayer()
         {
-            
+            await App.PlayerRepo.AddPlayer(NameEntry);
+            NameEntry = "";
+            GetPlayersList();
         }
         public async void GetPlayersList()
         {
-            //PlayerList = await App.PlayerRepo.GetAllPlayers();
-
-            PlayerList.Add(new Player() { Name = "Magnificent" });
-            PlayerList.Add(new Player() { Name = "xXxDeath_SniperxXx" });
-            PlayerList.Add(new Player() { Name = "Hoan" });
-
+            PlayerList = await App.PlayerRepo.GetAllPlayers();
         }
         
     }

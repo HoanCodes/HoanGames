@@ -8,10 +8,18 @@
              Title="Change Player">
     <ContentPage.Content>
         <StackLayout>
-            
-            <StackLayout Padding="30">
+
+            <StackLayout Padding="30" Orientation="Horizontal">
+                <Label Text="{Binding NameEntry}"/>
                 <Entry
+                    Text="{Binding NameEntry}"
                     Placeholder="Add Your Name!"
+                    ReturnCommand="{Binding AddPlayerCommand}"
+                    />
+                <Button 
+                    Text="Add"
+                    HorizontalOptions="End"
+                    Command="{Binding AddPlayerCommand}"
                     />
             </StackLayout>
             
