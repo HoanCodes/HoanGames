@@ -17,7 +17,7 @@ namespace HoanGames
             InitializeComponent();
 
             btnChangePlayer.Clicked += (s, e) => Navigation.PushAsync(new PlayerSelectPage());
-            btnMinesweeper.Clicked += (s, e) => Navigation.PushAsync(new MinesweeperPage());
+            btnMinesweeper.Clicked += (s, e) => Navigation.PushAsync(new MinesweeperModal());
         }
     }
 }

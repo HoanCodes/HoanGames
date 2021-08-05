@@ -10,7 +10,7 @@
 
     <StackLayout>
         <Label
-            Text="Welcome, Hoan!"
+            Text="Welcome!"
             Padding="30"
             FontSize="20"
             HorizontalOptions="CenterAndExpand"

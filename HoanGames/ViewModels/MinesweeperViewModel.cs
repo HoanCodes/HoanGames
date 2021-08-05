@@ -28,9 +28,9 @@ namespace HoanGames.ViewModels
         bool IsBusy { get; set; }
         bool GameFinished { get; set; }
         int NumOfMoves { get; set; } = 0;
-        int NumOfMines { get; set; } = 4;
-        int BoardWidth { get; } = 10;
-        int BoardHeight { get; } = 10;
+        int NumOfMines { get; set; } = 0;
+        int BoardWidth { get; set; } = 0;
+        int BoardHeight { get; set; } = 0;
         List<Cell> Board { get; set; }
         Grid BoardGrid { get; set; }
         public Command FlagCommand { get; }
@@ -51,9 +51,9 @@ namespace HoanGames.ViewModels
             BoardGrid.IsEnabled = true;
             Board = new List<Cell>();
             
-            for (int i = 0; i < BoardWidth; i++)
+            for (int i = 0; i < BoardHeight; i++)
             {
-                for (int j = 0; j < BoardHeight; j++)
+                for (int j = 0; j < BoardWidth; j++)
                 {
                     //Add Cell object to Board
                     Board.Add(new Cell(id++, j, i));
@@ -102,18 +102,41 @@ namespace HoanGames.ViewModels
                 }
             };
         }
-        public async void StartGame()
+        public void StartGame(char difficulty, int width = 0, int height = 0, int numOfMines = 0)
         {
-            await Task.Run(new Action(CreateBoard));
+            switch (difficulty)
+            {
+                case 'e':
+                    BoardWidth = 6;
+                    BoardHeight = 6;
+                    NumOfMines = 6;
+                    break;
+                case 'm':
+                    BoardWidth = 7;
+                    BoardHeight = 7;
+                    NumOfMines = 10;
+                    break;
+                case 'h':
+                    BoardWidth = 8;
+                    BoardHeight = 8;
+                    NumOfMines = 16;
+                    break;
+                case 'c':
+                    BoardWidth = (width > 10) ? 10 : width; //if number is larger than 10, set to 10
+                    BoardHeight = (height > 10) ? 10 : height;
+                    NumOfMines = numOfMines;
+                    break;
+            }
+            CreateBoard();
         }
-        public void OnRestartGame() //Cannot reuse StartGame because new async thread cannot modify the same view
+        public void OnRestartGame() 
         {
             GameFinished = false;
             NumOfMoves = 0;
             BoardGrid.Children.Clear();
             CreateBoard();
         }
-        public void OnPlayerMove(object sender, EventArgs e)
+        public void OnPlayerMove(object sender, EventArgs e) //Cell click event
         {
             var button = (Button)sender;
             var row = Grid.GetRow(button);
@@ -167,7 +190,8 @@ namespace HoanGames.ViewModels
 
                 }
             }
-            //if no adjacent mines, recursively reveal adjacent cells
+
+            //If no adjacent mines, recursively reveal adjacent cells
             if (NumOfAdjacentMines == 0)
             {
                 foreach (Cell cell in AdjacentCells)
@@ -201,11 +225,12 @@ namespace HoanGames.ViewModels
                 for (int j = playerCell.Y - 1; j <= playerCell.Y + 1; j++)
                 {
                     Cell cellFound = Board.Find(x => x.X == i && x.Y == j);
-                    StartingCells.Add(cellFound);
+                    if (cellFound != null) StartingCells.Add(cellFound);
                 }
             }
 
-            if (NumOfMines > BoardHeight * BoardWidth - 9) NumOfMines = BoardHeight * BoardWidth - 9;
+            //Check if there is enough space for the requested number of mines, if not, lower NumOfMines.
+            if (NumOfMines > BoardHeight * BoardWidth - StartingCells.Count) NumOfMines = BoardHeight * BoardWidth - StartingCells.Count;
             var mines = NumOfMines;
             while (mines > 0)
             {

@@ -15,14 +15,20 @@ namespace HoanGames.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MinesweeperPage : ContentPage
     {
-        public MinesweeperPage()
+        public MinesweeperViewModel Game { get; set; }
+        public MinesweeperPage(char difficulty, int width = 0, int height = 0, int numOfMines = 0)
         {
             InitializeComponent();
 
-            var Game = new MinesweeperViewModel(grid);
+            //Sends grid object to the ViewModel
+            Game = new MinesweeperViewModel(grid);
             BindingContext = Game;
+            
+            //Can reduce the amount of code-behind later
             Game.CreateBoard();
-            Game.StartGame();
+            Game.StartGame(difficulty, width, height, numOfMines);
+
+            //Subscription to allow the Modal to pop up on GameWon event
             Game.GameWon += WinSubsciber;
         }
         async void WinSubsciber(object sender, EventArgs e)
