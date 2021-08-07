@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -11,12 +11,30 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
-    <PackageReference Include="Xamarin.Forms" Version="4.3.0.908675" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.3.1" />
+    <PackageReference Include="Humanizer" Version="2.11.10" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="3.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="3.8.0" />
+    <PackageReference Include="Microsoft.Net.Compilers" Version="3.10.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="sqlite-net-pcl" Version="1.4.118" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2083" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\MinesweeperMenu.xaml.cs">
+      <DependentUpon>MinesweeperMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\MinesweeperPage.xaml.cs">
       <DependentUpon>MinesweeperPage.xaml</DependentUpon>
     </Compile>
@@ -26,10 +44,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\MinesweeperModal.xaml">
+    <EmbeddedResource Update="Views\MinesweeperMenu.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MinesweeperPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\MinesweeperTestPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\PlayerSelectPage.xaml">

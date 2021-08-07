@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using HoanGames.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
-using HoanGames.ViewModels;
 
 namespace HoanGames.Views
 
@@ -23,7 +17,7 @@ namespace HoanGames.Views
             //Sends grid object to the ViewModel
             Game = new MinesweeperViewModel(grid);
             BindingContext = Game;
-            
+
             //Can reduce the amount of code-behind later
             Game.CreateBoard();
             Game.StartGame(difficulty, width, height, numOfMines);
@@ -33,7 +27,7 @@ namespace HoanGames.Views
         }
         async void WinSubsciber(object sender, EventArgs e)
         {
-                await Navigation.PushModalAsync(new WinPage());
+            await Navigation.PushModalAsync(new WinPage());
         }
     }
 }

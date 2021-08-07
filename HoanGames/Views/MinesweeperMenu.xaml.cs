@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace HoanGames.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MinesweeperModal : ContentPage
+    public partial class MinesweeperMenu : ContentPage
     {
-        public MinesweeperModal()
+        public MinesweeperMenu()
         {
             InitializeComponent();
             btnEasy.Clicked += (s, e) =>

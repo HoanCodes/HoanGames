@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using HoanGames;
 
 namespace HoanGames.ViewModels
 {
@@ -12,7 +8,7 @@ namespace HoanGames.ViewModels
     {
 
         bool _holdingFlag;
-        public bool HoldingFlag 
+        public bool HoldingFlag
         {
             get
             {
@@ -50,7 +46,7 @@ namespace HoanGames.ViewModels
             int id = 0;
             BoardGrid.IsEnabled = true;
             Board = new List<Cell>();
-            
+
             for (int i = 0; i < BoardHeight; i++)
             {
                 for (int j = 0; j < BoardWidth; j++)
@@ -129,7 +125,7 @@ namespace HoanGames.ViewModels
             }
             CreateBoard();
         }
-        public void OnRestartGame() 
+        public void OnRestartGame()
         {
             GameFinished = false;
             NumOfMoves = 0;
@@ -148,7 +144,7 @@ namespace HoanGames.ViewModels
                 button.Text = "F";
                 button.TextColor = Color.Red;
                 HoldingFlag = false;
-               
+
             }
             else
             {
@@ -176,7 +172,7 @@ namespace HoanGames.ViewModels
             var AdjacentCells = new List<Cell>();
 
             //for loop around the playerCell to collect adjacent cells into a List
-            for (int i = playerCell.Y - 1; i <= playerCell.Y + 1; i++) 
+            for (int i = playerCell.Y - 1; i <= playerCell.Y + 1; i++)
             {
                 for (int j = playerCell.X - 1; j <= playerCell.X + 1; j++)
                 {
@@ -313,7 +309,7 @@ namespace HoanGames.ViewModels
                 BoardGrid.IsEnabled = false;
                 GameWon?.Invoke(this, EventArgs.Empty);
             }
-            
+
         }
         public class Cell
         {

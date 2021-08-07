@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using System.Threading.Tasks;
-using HoanGames.Models;
+﻿using HoanGames.Models;
 using SQLite;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HoanGames
 {
@@ -12,7 +10,7 @@ namespace HoanGames
     {
         SQLiteAsyncConnection conn;
         public string StatusMessage { get; set; }
-        
+
         public PlayerRepository(string dbPath)
         {
             conn = new SQLiteAsyncConnection(dbPath);

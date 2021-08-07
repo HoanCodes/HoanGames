@@ -9,9 +9,9 @@ namespace HoanGames.ViewModels
     {
         string _nameEntry;
         List<Player> _playerList;
-        public string NameEntry 
+        public string NameEntry
         {
-            get 
+            get
             {
                 return _nameEntry;
             }
@@ -22,7 +22,7 @@ namespace HoanGames.ViewModels
                 OnPropertyChanged(nameof(NameEntry));
             }
         }
-        public List<Player> PlayerList 
+        public List<Player> PlayerList
         {
             get
             {
@@ -61,6 +61,6 @@ namespace HoanGames.ViewModels
         {
             PlayerList = await App.PlayerRepo.GetAllPlayers();
         }
-        
+
     }
 }
