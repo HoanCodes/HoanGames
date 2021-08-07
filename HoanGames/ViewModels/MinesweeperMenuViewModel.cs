@@ -3,7 +3,7 @@ using Xamarin.Forms;
 
 namespace HoanGames.ViewModels
 {
-    class MinesweeperMenuViewModel
+    public class MinesweeperMenuViewModel
     {
         public Command EasyCommand { get; }
         public Command MediumCommand { get; }
@@ -12,14 +12,14 @@ namespace HoanGames.ViewModels
         public int WidthEntry { get; }
         public int HeightEntry { get; }
         public int MineEntry { get; }
-        private INavigation _navigation;
-
-        public MinesweeperMenuViewModel()
+        private readonly INavigation Navigation;
+        public MinesweeperMenuViewModel(INavigation navigation)
         {
-            EasyCommand = new Command(async () =>
-            {
-                await _navigation.PushAsync(new MinesweeperPage('e'));
-            });
+            Navigation = navigation;
+            EasyCommand = new Command(async () => await Navigation.PushAsync(new MinesweeperPage('e')).ConfigureAwait(false));
+            MediumCommand = new Command(async () => await Navigation.PushAsync(new MinesweeperPage('m')).ConfigureAwait(false));
+            HardCommand = new Command(async () => await Navigation.PushAsync(new MinesweeperPage('h')).ConfigureAwait(false));
+            CustomCommand = new Command(async () => await Navigation.PushAsync(new MinesweeperPage('c')).ConfigureAwait(false));
         }
     }
 }

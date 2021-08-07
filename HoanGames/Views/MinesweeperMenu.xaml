@@ -15,10 +15,10 @@
                        Margin="0, 20, 0, 20"
                        VerticalOptions="Start" 
                        HorizontalOptions="CenterAndExpand" />
-                <Button Text="Easy" x:Name="btnEasy"/>
-                <Button Text="Medium" x:Name="btnMedium"/>
-                <Button Text="Hard" x:Name="btnHard"/>
-                <Button Text="Custom" x:Name="btnCustom"/>
+                <Button Text="Easy" x:Name="btnEasy" Command="{Binding EasyCommand}"/>
+                <Button Text="Medium" x:Name="btnMedium" Command="{Binding MediumCommand}"/>
+                <Button Text="Hard" x:Name="btnHard" Command="{Binding HardCommand}"/>
+                <Button Text="Custom" x:Name="btnCustom" Command="{Binding CustomCommand}"/>
             </StackLayout>
             <Grid>
                 <Grid.ColumnDefinitions>

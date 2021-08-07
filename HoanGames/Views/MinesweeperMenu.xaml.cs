@@ -1,15 +1,15 @@
-﻿
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using HoanGames.ViewModels;
 
 namespace HoanGames.Views
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MinesweeperMenu : ContentPage
+    public partial class MinesweeperMenu
     {
         public MinesweeperMenu()
         {
             InitializeComponent();
+            BindingContext = new MinesweeperMenuViewModel(Navigation);
+
+            /*
             btnEasy.Clicked += (s, e) =>
             {
                 Navigation.PopModalAsync();
@@ -45,6 +45,7 @@ namespace HoanGames.Views
                 Navigation.PopModalAsync();
                 Navigation.PushAsync(new MinesweeperPage('c', w, h, m));
             };
+            */
         }
     }
 }

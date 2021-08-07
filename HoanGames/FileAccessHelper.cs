@@ -2,7 +2,7 @@
 
 namespace HoanGames
 {
-    class FileAccessHelper
+    public static class FileAccessHelper
     {
         public static string GetLocalFilePath(string filename)
         {

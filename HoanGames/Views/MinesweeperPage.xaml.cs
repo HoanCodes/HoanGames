@@ -27,7 +27,7 @@ namespace HoanGames.Views
         }
         async void WinSubsciber(object sender, EventArgs e)
         {
-            await Navigation.PushModalAsync(new WinPage());
+            await Navigation.PushModalAsync(new WinPage()).ConfigureAwait(false);
         }
     }
 }
