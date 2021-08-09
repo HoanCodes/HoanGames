@@ -8,41 +8,38 @@
              x:Name="TestPage">
     <ContentPage.Content>
         <StackLayout>
-            <StackLayout>
-                <Button 
-                        Text="Restart (not yet implemented)"
-                        />
-            </StackLayout>
-            <StackLayout>
-                <CollectionView ItemsSource="{Binding Board}">
-                    <CollectionView.ItemsLayout>
-                        <GridItemsLayout 
-                            Orientation="Vertical"
-                            Span="{Binding BoardWidth}" 
-                                         />
-                    </CollectionView.ItemsLayout>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <StackLayout>
-                                <Button 
-                                    Command="{Binding Source={x:Reference TestPage}, Path=BindingContext.RevealCellCommand}"
-                                    CommandParameter="{Binding Id}"
-                                    IsVisible="{Binding IsVisible}"
-                                    IsEnabled="{Binding IsEnabled}"
-                                    BackgroundColor="{Binding BgColor}"
-                                    />
-                                <Label
-                                    Text="{Binding AdjacentMines}"
-                                    FontSize="20"
-                                    HorizontalOptions="Center"
-                                    VerticalOptions="CenterAndExpand"
-                                    IsVisible="{Binding HasAdjacentMines}"
-                                    />
-                            </StackLayout>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </StackLayout>
+            <Button 
+                Text="Restart"
+                Command="{Binding RestartCommand}"/>
+            <CollectionView ItemsSource="{Binding Board}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout 
+                        Orientation="Vertical"
+                        Span="{Binding BoardWidth}" 
+                                        />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
+                            <Button 
+                                Command="{Binding Source={x:Reference TestPage}, Path=BindingContext.RevealCellCommand}"
+                                CommandParameter="{Binding Id}"
+                                IsVisible="{Binding IsVisible}"
+                                IsEnabled="{Binding IsEnabled}"
+                                BackgroundColor="{Binding BgColor}"
+                                />
+                            <Label
+                                Text="{Binding AdjacentMines}"
+                                FontSize="20"
+                                HorizontalOptions="Center"
+                                VerticalOptions="CenterAndExpand"
+                                IsVisible="{Binding HasAdjacentMines}"
+                                />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

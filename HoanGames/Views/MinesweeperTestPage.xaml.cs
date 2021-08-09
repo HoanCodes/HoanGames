@@ -10,7 +10,7 @@ namespace HoanGames.Views
         public MinesweeperTestPage()
         {
             InitializeComponent();
-            BindingContext = new MinesweeperTestViewModel();
+            BindingContext = new MinesweeperTestViewModel(Navigation);
         }
     }
 }
