@@ -10,6 +10,8 @@ namespace HoanGames
 
         public App()
         {
+            Xamarin.Forms.DataGrid.DataGridComponent.Init();
+
             InitializeComponent();
 
             PlayerRepo = new PlayerRepository(dbPath);

@@ -15,7 +15,7 @@
             FontSize="20"
             HorizontalOptions="CenterAndExpand"
             />
-        <Button Text="Testing ObservableCollection"/>
+        <Button Text="Testing CollectionView" Command="{Binding MinesweeperTestCommand}"/>
         <Button Text="Minesweeper" Command="{Binding MinesweeperCommand}"/>
         <Button Text="About" />
         <Button Text="Change Player" Command="{Binding ChangePlayerCommand}"/>

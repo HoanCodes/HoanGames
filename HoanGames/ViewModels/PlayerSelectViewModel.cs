@@ -1,14 +1,14 @@
 ﻿using HoanGames.Models;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Xamarin.Forms;
 
 namespace HoanGames.ViewModels
 {
     public class PlayerSelectViewModel : INotifyPropertyChanged
     {
-        string _nameEntry;
-        List<Player> _playerList;
+        private string _nameEntry;
         public string NameEntry
         {
             get
@@ -19,9 +19,10 @@ namespace HoanGames.ViewModels
             {
                 _nameEntry = value;
 
-                OnPropertyChanged(nameof(NameEntry));
+                OnPropertyChanged();
             }
         }
+        private List<Player> _playerList;
         public List<Player> PlayerList
         {
             get
@@ -32,16 +33,16 @@ namespace HoanGames.ViewModels
             {
                 _playerList = value;
 
-                OnPropertyChanged(nameof(PlayerList));
+                OnPropertyChanged();
             }
         }
 
         public Command AddPlayerCommand { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(string name)
+        public void OnPropertyChanged([CallerMemberName] string name = null)
         {
-            if (PropertyChanged != null) PropertyChanged.Invoke(this, new PropertyChangedEventArgs(name));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
         public PlayerSelectViewModel()
         {
@@ -53,14 +54,13 @@ namespace HoanGames.ViewModels
 
         public async void OnAddPlayer()
         {
-            await App.PlayerRepo.AddPlayer(NameEntry);
+            await App.PlayerRepo.AddPlayer(NameEntry).ConfigureAwait(false);
             NameEntry = "";
             GetPlayersList();
         }
         public async void GetPlayersList()
         {
-            PlayerList = await App.PlayerRepo.GetAllPlayers();
+            PlayerList = await App.PlayerRepo.GetAllPlayers().ConfigureAwait(false);
         }
-
     }
 }

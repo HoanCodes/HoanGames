@@ -28,19 +28,19 @@
                 </Grid.ColumnDefinitions>
                 <StackLayout Grid.Column="0" HorizontalOptions="CenterAndExpand">
                     <Label Text="Width (max 10)"/>
-                    <Entry x:Name="width"  Keyboard="Numeric"/>
+                    <Entry Text="{Binding WidthEntry}"  Keyboard="Numeric"/>
                 </StackLayout>
                 <StackLayout Grid.Column="1" HorizontalOptions="CenterAndExpand">
                     <Label Text="Height (max 10)"/>
-                    <Entry x:Name="height"  Keyboard="Numeric"/>
+                    <Entry Text="{Binding HeightEntry}"  Keyboard="Numeric"/>
                 </StackLayout>
                 <StackLayout Grid.Column="2" HorizontalOptions="CenterAndExpand">
                     <Label Text="Mines"/>
-                    <Entry x:Name="numOfMines" Keyboard="Numeric"/>
+                    <Entry Text="{Binding MineEntry}" Keyboard="Numeric"/>
                 </StackLayout>
             </Grid>
             <Label
-                x:Name="statusMessage"
+                Text="{Binding StatusMessage}"
                 TextColor="Red"
                 VerticalOptions="Start" 
                 HorizontalOptions="CenterAndExpand" />

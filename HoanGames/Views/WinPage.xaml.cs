@@ -10,7 +10,6 @@ namespace HoanGames.Views
         public WinPage()
         {
             InitializeComponent();
-
             btnBack.Clicked += (s, e) => Navigation.PopModalAsync();
         }
     }

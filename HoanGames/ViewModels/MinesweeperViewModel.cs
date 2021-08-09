@@ -6,8 +6,7 @@ namespace HoanGames.ViewModels
 {
     public class MinesweeperViewModel
     {
-
-        bool _holdingFlag;
+        private bool _holdingFlag;
         public bool HoldingFlag
         {
             get
@@ -21,14 +20,14 @@ namespace HoanGames.ViewModels
                 FlagCommand.ChangeCanExecute(); //disable button until (HoldingFlag == false)
             }
         }
-        bool IsBusy { get; set; }
+        //bool IsBusy { get; set; }
         bool GameFinished { get; set; }
         int NumOfMoves { get; set; } = 0;
         int NumOfMines { get; set; } = 0;
         int BoardWidth { get; set; } = 0;
         int BoardHeight { get; set; } = 0;
         List<Cell> Board { get; set; }
-        Grid BoardGrid { get; set; }
+        public Grid BoardGrid { get; set; }
         public Command FlagCommand { get; }
         public Command RestartCommand { get; }
 
@@ -94,7 +93,6 @@ namespace HoanGames.ViewModels
                     new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                     new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                     new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-
                 }
             };
         }
@@ -144,7 +142,6 @@ namespace HoanGames.ViewModels
                 button.Text = "F";
                 button.TextColor = Color.Red;
                 HoldingFlag = false;
-
             }
             else
             {
@@ -183,7 +180,6 @@ namespace HoanGames.ViewModels
                         AdjacentCells.Add(cellFound);
                         if (cellFound.HasMine) NumOfAdjacentMines++;
                     }
-
                 }
             }
 
@@ -199,20 +195,19 @@ namespace HoanGames.ViewModels
             //Replace Button with number of adjacent mines
             RemoveCell(playerCell.X, playerCell.Y, NumOfAdjacentMines);
 
-
-            if (NumOfMoves == BoardWidth * BoardHeight - NumOfMines)
+            if (NumOfMoves == (BoardWidth * BoardHeight) - NumOfMines)
             {
                 OnGameWon();
                 return;
             }
         }
 
-        void OnFlagClick()
+        private void OnFlagClick()
         {
             HoldingFlag = true;
         }
 
-        void GenerateMines(Cell playerCell)
+        private void GenerateMines(Cell playerCell)
         {
             //make sure the first cell never has adjacent mines
             var StartingCells = new List<Cell>();
@@ -226,7 +221,7 @@ namespace HoanGames.ViewModels
             }
 
             //Check if there is enough space for the requested number of mines, if not, lower NumOfMines.
-            if (NumOfMines > BoardHeight * BoardWidth - StartingCells.Count) NumOfMines = BoardHeight * BoardWidth - StartingCells.Count;
+            if (NumOfMines > (BoardHeight * BoardWidth) - StartingCells.Count) NumOfMines = (BoardHeight * BoardWidth) - StartingCells.Count;
             var mines = NumOfMines;
             while (mines > 0)
             {
@@ -237,7 +232,7 @@ namespace HoanGames.ViewModels
                         break;
                     }
 
-                    if (cell.HasMine == false && !StartingCells.Contains(cell))
+                    if (!cell.HasMine && !StartingCells.Contains(cell))
                     {
                         var rand = new Random();
                         if (rand.Next(101) < 20) //20% chance for each cell to have a mine
@@ -272,7 +267,6 @@ namespace HoanGames.ViewModels
                     {
                         BoardGrid.Children.Add(new Label(), col, row);
                     }
-
                 }
             }
         }
@@ -309,7 +303,6 @@ namespace HoanGames.ViewModels
                 BoardGrid.IsEnabled = false;
                 GameWon?.Invoke(this, EventArgs.Empty);
             }
-
         }
         public class Cell
         {
