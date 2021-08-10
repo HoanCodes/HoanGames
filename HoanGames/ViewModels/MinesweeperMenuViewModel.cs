@@ -72,20 +72,21 @@ namespace HoanGames.ViewModels
         {
             Navigation = navigation;
 
-            //Temporary solution, creating separate methods was not working..
+            //Temporary solution, creating separate methods was not working for some reason...
+            //REMOVED: ConfigureAwait(false), because Xamarin had issues with different threads rendering the elements.
             EasyCommand = new Command(async () =>
             {
-                Game GameSession = await App.GameRepo.GetGame();
+                Game GameSession = await App.GameRepo.GetGame(); //Check if there is a board record in local database
                 if (GameSession != null)
                 {
-                    await App.GameRepo.UpdateGame(6, 6, 6);
+                    await App.GameRepo.UpdateGame(6, 6, 6); //If there is, update it with new board width, height, and number of mines
                 }
                 else
                 {
-                    await App.GameRepo.AddGame(6, 6, 6);
+                    await App.GameRepo.AddGame(6, 6, 6); //If not, create a new board with the desired numbers
                 }
 
-                await Navigation.PushAsync(new MinesweeperPage());
+                await Navigation.PushAsync(new MinesweeperPage()); //Go to Minesweeper page to play the game
             });
             MediumCommand = new Command(async () =>
             {
@@ -130,7 +131,7 @@ namespace HoanGames.ViewModels
                 await Navigation.PushAsync(new MinesweeperPage());
             });
         }
-        public async void SetEasy() //Not sure why this would not work...
+        public async void SetEasy() //Not sure why this would not work
         {
             /*
             Game GameSession = await App.GameRepo.GetGame();

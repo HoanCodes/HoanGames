@@ -49,6 +49,17 @@ namespace HoanGames.ViewModels
             }
         }
 
+        private int _numOfMines;
+        public int NumOfMines
+        {
+            get => _numOfMines;
+            set
+            {
+                _numOfMines = value;
+                OnPropertyChanged();
+            }
+        }
+
         private int _boardWidth = 6;
         public int BoardWidth
         {
@@ -82,7 +93,6 @@ namespace HoanGames.ViewModels
             }
         }
         public double LayoutHeight { get; set; }
-        public int NumOfMines { get; set; }
         public int NumOfMoves { get; set; } = 0;
         public Command RevealCellCommand { get; }
         public Command RestartCommand { get; }
@@ -107,7 +117,9 @@ namespace HoanGames.ViewModels
             GameFinished = false;
             Board.Clear();
 
-            double cellHeight = Application.Current.MainPage.Height * 2 / 3 / BoardHeight;
+            //Temporary solution to make sure gameboard fits the screen
+            LayoutHeight = Application.Current.MainPage.Height * 2 / 3; //Take 2/3 of screen's height
+            double cellHeight = LayoutHeight / BoardHeight;
             LayoutWidth = cellHeight * BoardWidth;
 
             int id = 0;
