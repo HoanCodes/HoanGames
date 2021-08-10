@@ -7,54 +7,60 @@
              x:Class="HoanGames.Views.MinesweeperTestPage"
              x:Name="TestPage"
              Title="Minesweeper">
+    <!-- xmlns:views="clr-namespace:HoanGames.Views;assembly=HoanGames" To use SquareView and produce square cells -->
     <ContentPage.Content>
         <StackLayout Padding="15">
-            <RefreshView IsRefreshing="{Binding IsBusy}" 
-                         Command="{Binding RestartCommand}"
-                         VerticalOptions="CenterAndExpand"
-                         >
-                <CollectionView ItemsSource="{Binding Board}" 
-                                VerticalScrollBarVisibility="Always"
-                                HeightRequest="200"
+            <!--
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            -->
+            <CollectionView ItemsSource="{Binding Board}"
+                            Grid.Row="0"
+                            WidthRequest="{Binding LayoutWidth}"
+                            HorizontalOptions="Center"
                                 >
-                    <CollectionView.Header>
-                        <Button 
-                            Text="Restart"
-                            BackgroundColor="LightGray"
-                            Command="{Binding Source={x:Reference TestPage}, Path=BindingContext.RestartCommand}"
-                            />
-                    </CollectionView.Header>
-                    <CollectionView.ItemsLayout>
-                        <GridItemsLayout 
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout 
                             Orientation="Vertical"
                             Span="{Binding BoardWidth}" 
                             HorizontalItemSpacing="5"
                             VerticalItemSpacing="5"
                                             />
-                    </CollectionView.ItemsLayout>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <StackLayout>
-                                <Button 
-                                    Text="{Binding CellText}"
-                                    Font="20"
-                                    Command="{Binding Source={x:Reference TestPage}, Path=BindingContext.RevealCellCommand}"
-                                    CommandParameter="{Binding Id}"
-                                    IsVisible="{Binding IsVisible}"
-                                    IsEnabled="{Binding IsEnabled}"
-                                    BackgroundColor="{Binding BgColor}"
-                                    />
-                            </StackLayout>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </RefreshView>
-            <Button 
-                Text="Flag"
-                BackgroundColor="LightGray"
-                Command="{Binding FlagCommand}"
-                VerticalOptions="End"
-                />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Button 
+                            Text="{Binding CellText}"
+                            Font="20"
+                            HeightRequest="{Binding Height}"
+                            WidthRequest="{Binding Width}"
+                            IsVisible="{Binding IsVisible}"
+                            IsEnabled="{Binding IsEnabled}"
+                            BackgroundColor="{Binding BgColor}"
+                            Command="{Binding Source={x:Reference TestPage}, Path=BindingContext.RevealCellCommand}"
+                            CommandParameter="{Binding Id}"
+                            />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <StackLayout 
+                Orientation="Horizontal"
+                Grid.Row="1"
+                >
+                <Button
+                    Text="Flag"
+                    BackgroundColor="LightGray"
+                    Command="{Binding FlagCommand}"
+                    VerticalOptions="End"
+                    />
+                <Button 
+                    Text="Restart"
+                    BackgroundColor="LightGray"
+                    Command="{Binding Source={x:Reference TestPage}, Path=BindingContext.RestartCommand}"
+                    />
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

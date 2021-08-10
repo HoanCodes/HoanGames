@@ -37,7 +37,18 @@ namespace HoanGames.ViewModels
         }
         private readonly INavigation Navigation;
         public int BoardHeight { get; set; } = 6;
-        public int BoardWidth { get; set; } = 6;
+        public int BoardWidth { get; set; } = 2;
+        private double _layoutWidth;
+        public double LayoutWidth
+        {
+            get => _layoutWidth;
+            set
+            {
+                _layoutWidth = value;
+                OnPropertyChanged();
+            }
+        }
+        public double LayoutHeight { get; set; }
         public int NumOfMines { get; set; } = 8;
         public int NumOfMoves { get; set; } = 0;
         public Command RevealCellCommand { get; }
@@ -57,12 +68,20 @@ namespace HoanGames.ViewModels
             NumOfMoves = 0;
             GameFinished = false;
             Board.Clear();
+
+            double cellHeight = (Application.Current.MainPage.Height * 2 / 3) / BoardHeight;
+            LayoutWidth = cellHeight * BoardWidth;
+
             int id = 0;
             for (int i = 0; i < BoardHeight; i++)
             {
                 for (int j = 0; j < BoardWidth; j++)
                 {
-                    Board.Add(new Cell(id++, j, i));
+                    Board.Add(new Cell(id++, j, i)
+                    {
+                        Height = cellHeight,
+                        Width = cellHeight
+                    });
                 }
             }
             IsBusy = false;
@@ -113,7 +132,10 @@ namespace HoanGames.ViewModels
             {
                 foreach (Cell cell in AdjacentCells)
                 {
-                    if (!cell.IsRevealed && !GameFinished) RevealCell(cell.Id);
+                    if (!cell.IsRevealed && !GameFinished)
+                    {
+                        RevealCell(cell.Id);
+                    }
                 }
             }
             else
@@ -240,18 +262,33 @@ namespace HoanGames.ViewModels
             {
                 _isFlagged = value;
 
-                if (_isFlagged)
-                {
-                    CellText = "F";
-                }
-                else
-                {
-                    CellText = "";
-                }
+                CellText = _isFlagged ? "F" : "";
             }
         }
         public bool HasMine { get; set; }
+        
+        private double _width;
+        public double Width
+        {
+            get => _width;
+            set
+            {
+                _width = value;
+                OnPropertyChanged();
+            }
+        }
 
+        private double _height;
+        public double Height
+        {
+            get => _height;
+            set
+            {
+                _height = value;
+                OnPropertyChanged();
+            }
+        }
+        
         private string _cellText;
         public string CellText
         {
