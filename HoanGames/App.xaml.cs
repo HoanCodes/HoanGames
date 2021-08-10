@@ -4,8 +4,9 @@ namespace HoanGames
 {
     public partial class App : Application
     {
-        string dbPath => FileAccessHelper.GetLocalFilePath("people.db3");
+        private static string DbPath => FileAccessHelper.GetLocalFilePath("people.db3");
         public static PlayerRepository PlayerRepo { get; private set; }
+        public static GameRepository GameRepo { get; private set; }
         public NavigationPage Nav { get; set; }
 
         public App()
@@ -14,7 +15,9 @@ namespace HoanGames
 
             InitializeComponent();
 
-            PlayerRepo = new PlayerRepository(dbPath);
+            PlayerRepo = new PlayerRepository(DbPath);
+
+            GameRepo = new GameRepository(DbPath);
 
             Nav = new NavigationPage(new MainPage());
 

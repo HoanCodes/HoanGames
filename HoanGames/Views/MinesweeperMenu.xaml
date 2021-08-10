@@ -27,11 +27,11 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <StackLayout Grid.Column="0" HorizontalOptions="CenterAndExpand">
-                    <Label Text="Width (max 10)"/>
+                    <Label Text="Width"/>
                     <Entry Text="{Binding WidthEntry}"  Keyboard="Numeric"/>
                 </StackLayout>
                 <StackLayout Grid.Column="1" HorizontalOptions="CenterAndExpand">
-                    <Label Text="Height (max 10)"/>
+                    <Label Text="Height"/>
                     <Entry Text="{Binding HeightEntry}"  Keyboard="Numeric"/>
                 </StackLayout>
                 <StackLayout Grid.Column="2" HorizontalOptions="CenterAndExpand">

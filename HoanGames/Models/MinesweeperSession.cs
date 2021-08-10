@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using SQLite;
 
 namespace HoanGames.Models
 {
-    public class MinesweeperSession
+    [Table("games")]
+    public class Game
     {
-        int NumOfMines { get; set; } = 0;
-        int BoardWidth { get; set; } = 0;
-        int BoardHeight { get; set; } = 0;
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+        public int BoardWidth { get; set; }
+        public int BoardHeight { get; set; }
+        public int BoardMines { get; set; }
+
+        //Can store Cell List here later
     }
 }

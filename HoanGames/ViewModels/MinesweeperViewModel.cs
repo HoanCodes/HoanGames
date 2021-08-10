@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using Xamarin.Forms;
+using HoanGames.Views;
+using HoanGames.Models;
 
 namespace HoanGames.ViewModels
 {
-    public class MinesweeperViewModel
+    public class MinesweeperViewModel : INotifyPropertyChanged
     {
+        public ObservableCollection<Cell> Board { get; set; } = new ObservableCollection<Cell>();
+        private bool GameFinished { get; set; }
         private bool _holdingFlag;
         public bool HoldingFlag
         {
-            get
-            {
-                return _holdingFlag;
-            }
+            get => _holdingFlag;
             set
             {
                 _holdingFlag = value;
@@ -20,145 +25,135 @@ namespace HoanGames.ViewModels
                 FlagCommand.ChangeCanExecute(); //disable button until (HoldingFlag == false)
             }
         }
-        //bool IsBusy { get; set; }
-        bool GameFinished { get; set; }
-        int NumOfMoves { get; set; } = 0;
-        int NumOfMines { get; set; } = 0;
-        int BoardWidth { get; set; } = 0;
-        int BoardHeight { get; set; } = 0;
-        List<Cell> Board { get; set; }
-        public Grid BoardGrid { get; set; }
-        public Command FlagCommand { get; }
-        public Command RestartCommand { get; }
 
-        public event EventHandler<EventArgs> GameWon;
-
-        public MinesweeperViewModel(Grid gridInput)
+        private bool _isBusy;
+        public bool IsBusy
         {
-            BoardGrid = gridInput;
-            FlagCommand = new Command(OnFlagClick, () => !HoldingFlag);
-            RestartCommand = new Command(OnRestartGame);
+            get => _isBusy;
+            set
+            {
+                _isBusy = value;
+                OnPropertyChanged();
+            }
         }
 
-        public void CreateBoard()
+        private int _numOfFlags;
+        public int NumOfFlags
         {
-            int id = 0;
-            BoardGrid.IsEnabled = true;
-            Board = new List<Cell>();
+            get => _numOfFlags;
+            set
+            {
+                _numOfFlags = value;
+                OnPropertyChanged();
+            }
+        }
 
+        private int _boardWidth = 6;
+        public int BoardWidth
+        {
+            get => _boardWidth;
+            set
+            {
+                _boardWidth = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _boardHeight = 6;
+        public int BoardHeight
+        {
+            get => _boardHeight;
+            set
+            {
+                _boardHeight = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _layoutWidth;
+        public double LayoutWidth
+        {
+            get => _layoutWidth;
+            set
+            {
+                _layoutWidth = value;
+                OnPropertyChanged();
+            }
+        }
+        public double LayoutHeight { get; set; }
+        public int NumOfMines { get; set; }
+        public int NumOfMoves { get; set; } = 0;
+        public Command RevealCellCommand { get; }
+        public Command RestartCommand { get; }
+        public Command FlagCommand { get; }
+
+        private readonly INavigation Navigation;
+        public MinesweeperViewModel(INavigation navigation)
+        {
+            Navigation = navigation;
+            RevealCellCommand = new Command<int>(RevealCell);
+            RestartCommand = new Command(StartGame);
+            FlagCommand = new Command(GetFlag, () => !HoldingFlag);
+
+            GetGameSession();
+            StartGame();
+        }
+        public void StartGame()
+        {
+            IsBusy = true;
+            NumOfMoves = 0;
+            GameFinished = false;
+            Board.Clear();
+
+            double cellHeight = Application.Current.MainPage.Height * 2 / 3 / BoardHeight;
+            LayoutWidth = cellHeight * BoardWidth;
+
+            int id = 0;
             for (int i = 0; i < BoardHeight; i++)
             {
                 for (int j = 0; j < BoardWidth; j++)
                 {
-                    //Add Cell object to Board
-                    Board.Add(new Cell(id++, j, i));
-
-                    //Add Button to Grid
-                    Button playerMove;
-                    BoardGrid.Children.Add(playerMove = new Button()
+                    Board.Add(new Cell(id++, j, i)
                     {
-                        Padding = 0,
-                    }, j, i);
-                    playerMove.Clicked += OnPlayerMove;
+                        Height = cellHeight,
+                        Width = cellHeight
+                    });
                 }
             }
+            IsBusy = false;
         }
-
-        public void CreateGrid()
+        public void RevealCell(int cellId)
         {
-            BoardGrid = new Grid
-            {
-                RowDefinitions =
-                {
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                },
-                ColumnDefinitions =
-                {
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                }
-            };
-        }
-        public void StartGame(char difficulty, int width = 0, int height = 0, int numOfMines = 0)
-        {
-            switch (difficulty)
-            {
-                case 'e':
-                    BoardWidth = 6;
-                    BoardHeight = 6;
-                    NumOfMines = 6;
-                    break;
-                case 'm':
-                    BoardWidth = 7;
-                    BoardHeight = 7;
-                    NumOfMines = 10;
-                    break;
-                case 'h':
-                    BoardWidth = 8;
-                    BoardHeight = 8;
-                    NumOfMines = 16;
-                    break;
-                case 'c':
-                    BoardWidth = (width > 10) ? 10 : width; //if number is larger than 10, set to 10
-                    BoardHeight = (height > 10) ? 10 : height;
-                    NumOfMines = numOfMines;
-                    break;
-            }
-            CreateBoard();
-        }
-        public void OnRestartGame()
-        {
-            GameFinished = false;
-            NumOfMoves = 0;
-            BoardGrid.Children.Clear();
-            CreateBoard();
-        }
-        public void OnPlayerMove(object sender, EventArgs e) //Cell click event
-        {
-            var button = (Button)sender;
-            var row = Grid.GetRow(button);
-            var col = Grid.GetColumn(button);
-            Cell playerCell = Board.Find(cell => cell.X == col && cell.Y == row);
+            Cell playerCell = Board.FirstOrDefault(cell => cell.Id == cellId);
 
             if (HoldingFlag)
-            {   //Place an F on the cell
-                button.Text = "F";
-                button.TextColor = Color.Red;
-                HoldingFlag = false;
-            }
-            else
             {
-                RevealCell(playerCell);
-            }
-        }
+                playerCell.IsFlagged = !playerCell.IsFlagged;
+                HoldingFlag = false;
 
-        public void RevealCell(Cell playerCell)
-        {
+                /*
+                var numOfFlags = 0;
+                foreach (Cell cell in Board)
+                {
+                    if (cell.IsFlagged)
+                    {
+                        numOfFlags++;
+                    }
+                }
+                NumOfFlags = numOfFlags;
+                */
+
+                return;
+            }
+
             playerCell.IsRevealed = true;
+            var AdjacentCells = new List<Cell>();
             var NumOfAdjacentMines = 0;
 
-            if (NumOfMoves == 0)
+            if (NumOfMoves++ == 0)
             {
                 GenerateMines(playerCell);
             }
-            NumOfMoves++;
 
             if (playerCell.HasMine)
             {
@@ -166,14 +161,12 @@ namespace HoanGames.ViewModels
                 return;
             }
 
-            var AdjacentCells = new List<Cell>();
-
             //for loop around the playerCell to collect adjacent cells into a List
             for (int i = playerCell.Y - 1; i <= playerCell.Y + 1; i++)
             {
                 for (int j = playerCell.X - 1; j <= playerCell.X + 1; j++)
                 {
-                    Cell cellFound = Board.Find(cell => cell.X == j && cell.Y == i);
+                    Cell cellFound = Board.FirstOrDefault(cell => cell.X == j && cell.Y == i);
 
                     if (cellFound != null && cellFound.Id != playerCell.Id)
                     {
@@ -183,45 +176,50 @@ namespace HoanGames.ViewModels
                 }
             }
 
-            //If no adjacent mines, recursively reveal adjacent cells
+            //Only call RevealCell on adjacent cells if there are no adjacent cells
             if (NumOfAdjacentMines == 0)
             {
                 foreach (Cell cell in AdjacentCells)
                 {
-                    if (!cell.IsRevealed && !GameFinished) RevealCell(cell);
+                    if (!cell.IsRevealed && !GameFinished)
+                    {
+                        RevealCell(cell.Id);
+                    }
                 }
             }
+            else
+            {
+                playerCell.CellText = NumOfAdjacentMines.ToString();
+            }
 
-            //Replace Button with number of adjacent mines
-            RemoveCell(playerCell.X, playerCell.Y, NumOfAdjacentMines);
-
+            //Win condition check
             if (NumOfMoves == (BoardWidth * BoardHeight) - NumOfMines)
             {
-                OnGameWon();
-                return;
+                GameWon();
             }
         }
-
-        private void OnFlagClick()
+        public void GenerateMines(Cell playerCell)
         {
-            HoldingFlag = true;
-        }
-
-        private void GenerateMines(Cell playerCell)
-        {
-            //make sure the first cell never has adjacent mines
+            //Makes sure there are no mines around the starting cell
             var StartingCells = new List<Cell>();
-            for (int i = playerCell.X - 1; i <= playerCell.X + 1; i++) //for loop around the playerCell to collect into a List
+            for (int i = playerCell.X - 1; i <= playerCell.X + 1; i++)
             {
                 for (int j = playerCell.Y - 1; j <= playerCell.Y + 1; j++)
                 {
-                    Cell cellFound = Board.Find(x => x.X == i && x.Y == j);
-                    if (cellFound != null) StartingCells.Add(cellFound);
+                    Cell cellFound = Board.FirstOrDefault(x => x.X == i && x.Y == j);
+                    if (cellFound != null)
+                    {
+                        StartingCells.Add(cellFound);
+                    }
                 }
             }
-
             //Check if there is enough space for the requested number of mines, if not, lower NumOfMines.
-            if (NumOfMines > (BoardHeight * BoardWidth) - StartingCells.Count) NumOfMines = (BoardHeight * BoardWidth) - StartingCells.Count;
+            if (NumOfMines > (BoardHeight * BoardWidth) - StartingCells.Count)
+            {
+                NumOfMines = (BoardHeight * BoardWidth) - StartingCells.Count;
+            }
+
+            //Set up mines
             var mines = NumOfMines;
             while (mines > 0)
             {
@@ -244,82 +242,180 @@ namespace HoanGames.ViewModels
                 }
             }
         }
-
-        public void RemoveCell(int col, int row, int numOfAdjacentMines)
+        public void GetFlag()
         {
-            for (int index = BoardGrid.Children.Count - 1; index >= 0; index--)
-            {
-                if (Grid.GetRow(BoardGrid.Children[index]) == row && Grid.GetColumn(BoardGrid.Children[index]) == col)
-                {
-                    BoardGrid.Children.RemoveAt(index);
+            HoldingFlag = true;
+        }
+        public async void GetGameSession()
+        {
+            Game GameSession = await App.GameRepo.GetGame().ConfigureAwait(false);
 
-                    if (numOfAdjacentMines > 0)
-                    {
-                        BoardGrid.Children.Add(new Label
-                        {
-                            Text = Convert.ToString(numOfAdjacentMines),
-                            HorizontalOptions = LayoutOptions.Center,
-                            VerticalOptions = LayoutOptions.Center,
-                            FontSize = 20,
-                        }, col, row);
-                    }
-                    else
-                    {
-                        BoardGrid.Children.Add(new Label(), col, row);
-                    }
+            BoardWidth = GameSession.BoardWidth;
+            BoardHeight = GameSession.BoardHeight;
+            NumOfMines = GameSession.BoardMines;
+        }
+        public async void GameWon()
+        {
+            if (GameFinished)
+            {
+                return;
+            }
+            GameFinished = true;
+            await Navigation.PushModalAsync(new WinPage()).ConfigureAwait(false);
+            foreach (Cell cell in Board)
+            {
+                cell.IsEnabled = false;
+                if (cell.HasMine)
+                {
+                    cell.BgColor = Color.Green;
                 }
             }
         }
-
         public void GameOver()
         {
             GameFinished = true;
-            BoardGrid.IsEnabled = false;
-
-            for (int index = BoardGrid.Children.Count - 1; index >= 0; index--)
+            foreach (Cell cell in Board)
             {
-                var row = Grid.GetRow(BoardGrid.Children[index]);
-                var col = Grid.GetColumn(BoardGrid.Children[index]);
-                Cell playerCell = Board.Find(cell => cell.X == col && cell.Y == row);
-                if (playerCell.HasMine)
+                cell.IsEnabled = false;
+                if (cell.HasMine)
                 {
-                    BoardGrid.Children.RemoveAt(index);
-                    BoardGrid.Children.Add(new Label
-                    {
-                        Text = "M",
-                        TextColor = Color.Orange,
-                        HorizontalOptions = LayoutOptions.Center,
-                        VerticalOptions = LayoutOptions.Center,
-                        FontSize = 20,
-                    }, col, row);
+                    cell.CellText = "X";
+                    cell.BgColor = Color.Red;
                 }
             }
         }
-        protected virtual void OnGameWon()
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string name = null)
         {
-            if (!GameFinished)
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+    }
+    public class Cell : INotifyPropertyChanged
+    {
+        private bool _isRevealed;
+        public bool IsRevealed
+        {
+            get => _isRevealed;
+            set
             {
-                GameFinished = true;
-                BoardGrid.IsEnabled = false;
-                GameWon?.Invoke(this, EventArgs.Empty);
+                _isRevealed = value;
+
+                if (_isRevealed)
+                {
+                    //Disable cell
+                    CellText = "";
+                    BgColor = Color.White;
+                    IsEnabled = false;
+                }
             }
         }
-        public class Cell
+        public bool _isFlagged;
+        public bool IsFlagged
         {
-            public bool IsRevealed { get; set; }
-            public bool IsFlagged { get; set; }
-            public bool HasMine { get; set; }
-            public int AdjacentMines { get; set; }
-            public int X { get; set; }
-            public int Y { get; set; }
-            public int Id { get; set; }
-
-            public Cell(int id, int x, int y)
+            get => _isFlagged;
+            set
             {
-                X = x;
-                Y = y;
-                Id = id;
+                _isFlagged = value;
+                CellText = _isFlagged ? "F" : "";
             }
+        }
+        public bool HasMine { get; set; }
+
+        private double _width;
+        public double Width
+        {
+            get => _width;
+            set
+            {
+                _width = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _height;
+        public double Height
+        {
+            get => _height;
+            set
+            {
+                _height = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _cellText;
+        public string CellText
+        {
+            get => _cellText;
+            set
+            {
+                _cellText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isEnabled = true;
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set
+            {
+                _isEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isVisible = true;
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set
+            {
+                _isVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Color _bgColor = Color.LightGray;
+        public Color BgColor
+        {
+            get
+            {
+                return _bgColor;
+            }
+            set
+            {
+                _bgColor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _id;
+        public int Id
+        {
+            get => _id;
+            set
+            {
+                _id = value;
+                OnPropertyChanged();
+            }
+        }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public Cell(int id, int x, int y)
+        {
+            Id = id;
+            X = x;
+            Y = y;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }

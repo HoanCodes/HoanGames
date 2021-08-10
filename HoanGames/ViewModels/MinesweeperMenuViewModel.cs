@@ -1,14 +1,17 @@
-﻿using HoanGames.Views;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Xamarin.Forms;
+using HoanGames.Models;
+using HoanGames.Views;
+using System.Runtime.CompilerServices;
 
 namespace HoanGames.ViewModels
 {
     public class MinesweeperMenuViewModel : INotifyPropertyChanged
     {
-        public int _widthEntry = 10;
-        public int _heightEntry = 10;
-        public int _mineEntry = 20;
+        public int _widthEntry = 2;
+        public int _heightEntry = 20;
+        public int _mineEntry = 40;
+        private string _statusMessage;
         public Command EasyCommand { get; }
         public Command MediumCommand { get; }
         public Command HardCommand { get; }
@@ -46,10 +49,21 @@ namespace HoanGames.ViewModels
             set
             {
                 _mineEntry = value;
-                OnPropertyChanged(nameof(MineEntry));
+                OnPropertyChanged();
             }
         }
-        public string StatusMessage { get; }
+        public string StatusMessage
+        {
+            get
+            {
+                return _statusMessage;
+            }
+            set
+            {
+                _statusMessage = value;
+                OnPropertyChanged();
+            }
+        }
         private readonly INavigation Navigation;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -57,12 +71,81 @@ namespace HoanGames.ViewModels
         public MinesweeperMenuViewModel(INavigation navigation)
         {
             Navigation = navigation;
-            EasyCommand = new Command(async () => await Navigation.PushAsync(new MinesweeperPage('e')).ConfigureAwait(false));
-            MediumCommand = new Command(async () => await Navigation.PushAsync(new MinesweeperPage('m')).ConfigureAwait(false));
-            HardCommand = new Command(async () => await Navigation.PushAsync(new MinesweeperPage('h')).ConfigureAwait(false));
-            CustomCommand = new Command(async () => await Navigation.PushAsync(new MinesweeperPage('c', WidthEntry, HeightEntry, MineEntry)).ConfigureAwait(false));
+
+            //Temporary solution, creating separate methods was not working..
+            EasyCommand = new Command(async () =>
+            {
+                Game GameSession = await App.GameRepo.GetGame();
+                if (GameSession != null)
+                {
+                    await App.GameRepo.UpdateGame(6, 6, 6);
+                }
+                else
+                {
+                    await App.GameRepo.AddGame(6, 6, 6);
+                }
+
+                await Navigation.PushAsync(new MinesweeperPage());
+            });
+            MediumCommand = new Command(async () =>
+            {
+                Game GameSession = await App.GameRepo.GetGame();
+                if (GameSession != null)
+                {
+                    await App.GameRepo.UpdateGame(8, 8, 12);
+                }
+                else
+                {
+                    await App.GameRepo.AddGame(8, 8, 12);
+                }
+
+                await Navigation.PushAsync(new MinesweeperPage());
+            });
+            HardCommand = new Command(async () =>
+            {
+                Game GameSession = await App.GameRepo.GetGame();
+                if (GameSession != null)
+                {
+                    await App.GameRepo.UpdateGame(10, 10, 20);
+                }
+                else
+                {
+                    await App.GameRepo.AddGame(10, 10, 20);
+                }
+
+                await Navigation.PushAsync(new MinesweeperPage());
+            });
+            CustomCommand = new Command(async () =>
+            {
+                Game GameSession = await App.GameRepo.GetGame();
+                if (GameSession != null)
+                {
+                    await App.GameRepo.UpdateGame(WidthEntry, HeightEntry, MineEntry);
+                }
+                else
+                {
+                    await App.GameRepo.AddGame(WidthEntry, HeightEntry, MineEntry);
+                }
+
+                await Navigation.PushAsync(new MinesweeperPage());
+            });
         }
-        public void OnPropertyChanged(string name)
+        public async void SetEasy() //Not sure why this would not work...
+        {
+            /*
+            Game GameSession = await App.GameRepo.GetGame();
+            if (GameSession != null)
+            {
+                await App.GameRepo.UpdateGame(6, 6);
+            }
+            else
+            {
+                await App.GameRepo.AddGame(6, 6);
+            }
+            */
+            await Navigation.PushAsync(new MinesweeperPage()).ConfigureAwait(false);
+        }
+        public void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
