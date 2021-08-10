@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using Xamarin.Forms;
 using HoanGames.Views;
 using HoanGames.Models;
+using System.Threading.Tasks;
 
 namespace HoanGames.ViewModels
 {
@@ -95,11 +96,12 @@ namespace HoanGames.ViewModels
             RestartCommand = new Command(StartGame);
             FlagCommand = new Command(GetFlag, () => !HoldingFlag);
 
-            GetGameSession();
             StartGame();
         }
-        public void StartGame()
+        public async void StartGame()
         {
+            await GetGameSession();
+
             IsBusy = true;
             NumOfMoves = 0;
             GameFinished = false;
@@ -246,7 +248,7 @@ namespace HoanGames.ViewModels
         {
             HoldingFlag = true;
         }
-        public async void GetGameSession()
+        public async Task GetGameSession()
         {
             Game GameSession = await App.GameRepo.GetGame().ConfigureAwait(false);
 
