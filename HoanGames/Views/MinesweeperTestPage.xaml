@@ -5,41 +5,56 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="HoanGames.Views.MinesweeperTestPage"
-             x:Name="TestPage">
+             x:Name="TestPage"
+             Title="Minesweeper">
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout Padding="15">
+            <RefreshView IsRefreshing="{Binding IsBusy}" 
+                         Command="{Binding RestartCommand}"
+                         VerticalOptions="CenterAndExpand"
+                         >
+                <CollectionView ItemsSource="{Binding Board}" 
+                                VerticalScrollBarVisibility="Always"
+                                HeightRequest="200"
+                                >
+                    <CollectionView.Header>
+                        <Button 
+                            Text="Restart"
+                            BackgroundColor="LightGray"
+                            Command="{Binding Source={x:Reference TestPage}, Path=BindingContext.RestartCommand}"
+                            />
+                    </CollectionView.Header>
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout 
+                            Orientation="Vertical"
+                            Span="{Binding BoardWidth}" 
+                            HorizontalItemSpacing="5"
+                            VerticalItemSpacing="5"
+                                            />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout>
+                                <Button 
+                                    Text="{Binding CellText}"
+                                    Font="20"
+                                    Command="{Binding Source={x:Reference TestPage}, Path=BindingContext.RevealCellCommand}"
+                                    CommandParameter="{Binding Id}"
+                                    IsVisible="{Binding IsVisible}"
+                                    IsEnabled="{Binding IsEnabled}"
+                                    BackgroundColor="{Binding BgColor}"
+                                    />
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
             <Button 
-                Text="Restart"
-                Command="{Binding RestartCommand}"/>
-            <CollectionView ItemsSource="{Binding Board}">
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout 
-                        Orientation="Vertical"
-                        Span="{Binding BoardWidth}" 
-                                        />
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout>
-                            <Button 
-                                Command="{Binding Source={x:Reference TestPage}, Path=BindingContext.RevealCellCommand}"
-                                CommandParameter="{Binding Id}"
-                                IsVisible="{Binding IsVisible}"
-                                IsEnabled="{Binding IsEnabled}"
-                                BackgroundColor="{Binding BgColor}"
-                                />
-                            <Label
-                                Text="{Binding AdjacentMines}"
-                                FontSize="20"
-                                HorizontalOptions="Center"
-                                VerticalOptions="CenterAndExpand"
-                                IsVisible="{Binding HasAdjacentMines}"
-                                />
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-            
+                Text="Flag"
+                BackgroundColor="LightGray"
+                Command="{Binding FlagCommand}"
+                VerticalOptions="End"
+                />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

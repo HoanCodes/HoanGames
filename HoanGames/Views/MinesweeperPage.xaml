@@ -19,7 +19,6 @@
             ColumnSpacing="0"
             VerticalOptions="FillAndExpand"
             >
-            
         </Grid>
         
         <Button
