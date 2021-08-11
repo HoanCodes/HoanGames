@@ -30,20 +30,23 @@
                         <AbsoluteLayout
                             >
                             <Button 
-                            WidthRequest="{Binding Width}"
-                            HeightRequest="{Binding Height}"
-                            IsVisible="{Binding IsVisible}"
-                            IsEnabled="{Binding IsEnabled}"
-                            BackgroundColor="{Binding BgColor}"
-                            Command="{Binding Source={x:Reference Page}, Path=BindingContext.RevealCellCommand}"
-                            CommandParameter="{Binding Id}"
+                                WidthRequest="{Binding Width}"
+                                HeightRequest="{Binding Height}"
+                                IsVisible="{Binding IsVisible}"
+                                IsEnabled="{Binding IsEnabled}"
+                                BackgroundColor="{Binding BgColor}"
+                                Command="{Binding Source={x:Reference Page}, Path=BindingContext.RevealCellCommand}"
+                                CommandParameter="{Binding Id}"
                             />
-                            <Label 
-                                Text="{Binding CellText}"
-                                FontSize="15"
+                            <AbsoluteLayout
                                 AbsoluteLayout.LayoutBounds="0.5,0.5,AutoSize,AutoSize"   
                                 AbsoluteLayout.LayoutFlags="XProportional,YProportional" 
-                                />
+                                >
+                                <Label 
+                                    Text="{Binding CellText}"
+                                    FontSize="15"
+                                    />
+                            </AbsoluteLayout>
                         </AbsoluteLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
@@ -59,7 +62,7 @@
                 </Grid.ColumnDefinitions>
                 <Button
                     Text="Flag"
-                    BackgroundColor="LightGray"
+                    BackgroundColor="Orange"
                     Command="{Binding FlagCommand}"
                     Grid.ColumnSpan="2"
                     />
@@ -70,10 +73,10 @@
                     Grid.Column="2"
                     />
                 <Button 
-                    Text="{Binding NumOfMines, StringFormat='{0}M'}"
+                    Text="{Binding NumOfFlags}"
                     BackgroundColor="White"
                     BorderWidth="2"
-                    BorderColor="DarkCyan"
+                    BorderColor="LightGray"
                     Grid.Column="3"
                     />
             </Grid>

@@ -38,8 +38,8 @@ namespace HoanGames.ViewModels
             }
         }
 
-        private int _numOfFlags;
-        public int NumOfFlags
+        private string _numOfFlags;
+        public string NumOfFlags
         {
             get => _numOfFlags;
             set
@@ -122,6 +122,7 @@ namespace HoanGames.ViewModels
             double cellHeight = LayoutHeight / BoardHeight;
             LayoutWidth = cellHeight * BoardWidth;
 
+            //Fill in Board with new cells
             int id = 0;
             for (int i = 0; i < BoardHeight; i++)
             {
@@ -138,87 +139,87 @@ namespace HoanGames.ViewModels
         }
         public void RevealCell(int cellId)
         {
-            Cell playerCell = Board.FirstOrDefault(cell => cell.Id == cellId);
+            //Get cell that was played by the user
+            Cell currentCell = Board.FirstOrDefault(cell => cell.Id == cellId);
 
             if (HoldingFlag)
             {
-                playerCell.IsFlagged = !playerCell.IsFlagged;
+                currentCell.IsFlagged = !currentCell.IsFlagged;
                 HoldingFlag = false;
-
-                /*
-                var numOfFlags = 0;
-                foreach (Cell cell in Board)
-                {
-                    if (cell.IsFlagged)
-                    {
-                        numOfFlags++;
-                    }
-                }
-                NumOfFlags = numOfFlags;
-                */
-
-                return;
-            }
-
-            playerCell.IsRevealed = true;
-            var AdjacentCells = new List<Cell>();
-            var NumOfAdjacentMines = 0;
-
-            if (NumOfMoves++ == 0)
-            {
-                GenerateMines(playerCell);
-            }
-
-            if (playerCell.HasMine)
-            {
-                GameOver();
-                return;
-            }
-
-            //for loop around the playerCell to collect adjacent cells into a List
-            for (int i = playerCell.Y - 1; i <= playerCell.Y + 1; i++)
-            {
-                for (int j = playerCell.X - 1; j <= playerCell.X + 1; j++)
-                {
-                    Cell cellFound = Board.FirstOrDefault(cell => cell.X == j && cell.Y == i);
-
-                    if (cellFound != null && cellFound.Id != playerCell.Id)
-                    {
-                        AdjacentCells.Add(cellFound);
-                        if (cellFound.HasMine) NumOfAdjacentMines++;
-                    }
-                }
-            }
-
-            //Only call RevealCell on adjacent cells if there are no adjacent cells
-            if (NumOfAdjacentMines == 0)
-            {
-                foreach (Cell cell in AdjacentCells)
-                {
-                    if (!cell.IsRevealed && !GameFinished)
-                    {
-                        RevealCell(cell.Id);
-                    }
-                }
             }
             else
             {
-                playerCell.CellText = NumOfAdjacentMines.ToString();
+                currentCell.IsRevealed = true;
+                var AdjacentCells = new List<Cell>();
+                var NumOfAdjacentMines = 0;
+
+                if (NumOfMoves++ == 0)
+                {
+                    GenerateMines(currentCell);
+                }
+
+                if (currentCell.HasMine)
+                {
+                    GameOver();
+                    return;
+                }
+
+                //for loop around the currentCell to collect adjacent cells into a List
+                for (int i = currentCell.Y - 1; i <= currentCell.Y + 1; i++)
+                {
+                    for (int j = currentCell.X - 1; j <= currentCell.X + 1; j++)
+                    {
+                        Cell cellFound = Board.FirstOrDefault(cell => cell.X == j && cell.Y == i);
+
+                        if (cellFound != null && cellFound.Id != currentCell.Id)
+                        {
+                            AdjacentCells.Add(cellFound);
+                            if (cellFound.HasMine) NumOfAdjacentMines++;
+                        }
+                    }
+                }
+
+                //Only call RevealCell on adjacent cells if there are no adjacent cells
+                if (NumOfAdjacentMines == 0)
+                {
+                    foreach (Cell cell in AdjacentCells)
+                    {
+                        if (!cell.IsRevealed && !GameFinished)
+                        {
+                            RevealCell(cell.Id);
+                        }
+                    }
+                }
+                else
+                {
+                    currentCell.CellText = NumOfAdjacentMines.ToString(); //Write number onto cell
+                }
+
+                //Win condition check
+                if (NumOfMoves == (BoardWidth * BoardHeight) - NumOfMines)
+                {
+                    GameWon();
+                }
             }
 
-            //Win condition check
-            if (NumOfMoves == (BoardWidth * BoardHeight) - NumOfMines)
+            // Flag/Mine Counter 
+            var numOfFlags = 0;
+            foreach (Cell cell in Board)
             {
-                GameWon();
+                if (cell.IsFlagged)
+                {
+                    numOfFlags++;
+                }
             }
+            NumOfFlags = string.Format("{0}/{1}", numOfFlags, NumOfMines);
         }
-        public void GenerateMines(Cell playerCell)
+        public void GenerateMines(Cell currentCell)
         {
             //Makes sure there are no mines around the starting cell
             var StartingCells = new List<Cell>();
-            for (int i = playerCell.X - 1; i <= playerCell.X + 1; i++)
+            for (int i = currentCell.X - 1; i <= currentCell.X + 1; i++)
             {
-                for (int j = playerCell.Y - 1; j <= playerCell.Y + 1; j++)
+                for (int j = currentCell.Y - 1; j <= currentCell.Y + 1; j++)
                 {
                     Cell cellFound = Board.FirstOrDefault(x => x.X == i && x.Y == j);
                     if (cellFound != null)
@@ -332,7 +333,7 @@ namespace HoanGames.ViewModels
             set
             {
                 _isFlagged = value;
-                CellText = _isFlagged ? "F" : "";
+                BgColor = _isFlagged ? Color.Orange : Color.LightGray;
             }
         }
         public bool HasMine { get; set; }
