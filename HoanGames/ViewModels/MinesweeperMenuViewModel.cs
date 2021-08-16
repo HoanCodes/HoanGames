@@ -13,7 +13,7 @@ namespace HoanGames.ViewModels
         public int _mineEntry = 40;
         private string _statusMessage;
         public Command<string> DifficultyCommand { get; }
-        
+
         public int WidthEntry
         {
             get
@@ -71,7 +71,7 @@ namespace HoanGames.ViewModels
             Navigation = navigation;
             DifficultyCommand = new Command<string>(SetDifficulty);
         }
-        public void SetDifficulty(string difficulty) //Not sure why this would not work
+        public void SetDifficulty(string difficulty)
         {
             switch (int.Parse(difficulty))
             {

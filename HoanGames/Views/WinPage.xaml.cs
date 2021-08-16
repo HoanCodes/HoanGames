@@ -1,16 +1,13 @@
-﻿
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using HoanGames.ViewModels;
 
 namespace HoanGames.Views
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class WinPage : ContentPage
+    public partial class WinPage
     {
         public WinPage()
         {
             InitializeComponent();
-            btnBack.Clicked += (s, e) => Navigation.PopModalAsync();
+            BindingContext = new WinViewModel(Navigation);
         }
     }
 }

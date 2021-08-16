@@ -1,6 +1,4 @@
 ﻿using HoanGames.ViewModels;
-using System;
-using Xamarin.Forms;
 
 namespace HoanGames.Views
 {

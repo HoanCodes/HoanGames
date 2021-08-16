@@ -15,7 +15,7 @@
             <Image
                 VerticalOptions="CenterAndExpand"
                 Source="https://clipartmag.com/images/smiley-faces-sunglasses-36.jpg"/>
-            <Button x:Name="btnBack" Text="Go Back"/>
+            <Button Text="Go Back" Command="{Binding BackCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

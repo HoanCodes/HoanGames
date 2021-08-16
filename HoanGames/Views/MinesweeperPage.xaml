@@ -13,47 +13,50 @@
                 <RowDefinition Height="10*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            <!--
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="True" IsEnabled="True" Grid.RowSpan="2" Color="Blue"/>
+            -->
             <CollectionView ItemsSource="{Binding Board}"
-                            WidthRequest="{Binding LayoutWidth}"
-                            HorizontalOptions="Center"
-                                >
+                        WidthRequest="{Binding LayoutWidth}"
+                        HorizontalOptions="Center"
+                            >
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout 
-                            Orientation="Vertical"
-                            Span="{Binding BoardWidth}" 
-                            HorizontalItemSpacing="2"
-                            VerticalItemSpacing="2"
-                                            />
+                        Orientation="Vertical"
+                        Span="{Binding BoardWidth}" 
+                        HorizontalItemSpacing="2"
+                        VerticalItemSpacing="2"
+                                        />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <AbsoluteLayout
-                            >
+                        >
                             <Button 
-                                WidthRequest="{Binding Width}"
-                                HeightRequest="{Binding Height}"
-                                IsVisible="{Binding IsVisible}"
-                                IsEnabled="{Binding IsEnabled}"
-                                BackgroundColor="{Binding BgColor}"
-                                Command="{Binding Source={x:Reference Page}, Path=BindingContext.RevealCellCommand}"
-                                CommandParameter="{Binding Id}"
-                            />
+                            WidthRequest="{Binding Width}"
+                            HeightRequest="{Binding Height}"
+                            IsVisible="{Binding IsVisible}"
+                            IsEnabled="{Binding IsEnabled}"
+                            BackgroundColor="{Binding BgColor}"
+                            Command="{Binding Source={x:Reference Page}, Path=BindingContext.RevealCellCommand}"
+                            CommandParameter="{Binding Id}"
+                        />
                             <AbsoluteLayout
-                                AbsoluteLayout.LayoutBounds="0.5,0.5,AutoSize,AutoSize"   
-                                AbsoluteLayout.LayoutFlags="XProportional,YProportional" 
-                                >
+                            AbsoluteLayout.LayoutBounds="0.5,0.5,AutoSize,AutoSize"   
+                            AbsoluteLayout.LayoutFlags="XProportional,YProportional" 
+                            >
                                 <Label 
-                                    Text="{Binding CellText}"
-                                    FontSize="15"
-                                    />
+                                Text="{Binding CellText}"
+                                FontSize="15"
+                                />
                             </AbsoluteLayout>
                         </AbsoluteLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
             <Grid
-                Grid.Row="1"
-                >
+            Grid.Row="1"
+            >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -61,24 +64,24 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Button
-                    Text="Flag"
-                    BackgroundColor="Orange"
-                    Command="{Binding FlagCommand}"
-                    Grid.ColumnSpan="2"
-                    />
+                Text="{Binding NumOfFlags}"
+                BackgroundColor="Orange"
+                Command="{Binding FlagCommand}"
+                Grid.ColumnSpan="2"
+                />
                 <Button 
-                    Text="RE"
-                    BackgroundColor="LightGray"
-                    Command="{Binding RestartCommand}"
-                    Grid.Column="2"
-                    />
+                Text="RE"
+                BackgroundColor="LightGray"
+                Command="{Binding RestartCommand}"
+                Grid.Column="2"
+                />
                 <Button 
-                    Text="{Binding NumOfFlags}"
-                    BackgroundColor="White"
-                    BorderWidth="2"
-                    BorderColor="LightGray"
-                    Grid.Column="3"
-                    />
+                Text="Timer"
+                BackgroundColor="White"
+                BorderWidth="2"
+                BorderColor="LightGray"
+                Grid.Column="3"
+                />
             </Grid>
         </Grid>
     </ContentPage.Content>

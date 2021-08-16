@@ -120,11 +120,12 @@ namespace HoanGames.ViewModels
         }
         public async void StartGame()
         {
-            await GetGameSession();
-
             IsBusy = true;
+
+            await GetGameSession();
             NumOfMoves = 0;
             GameFinished = false;
+            NumOfFlags = string.Format("Flags 0/{0}", NumOfMines);
             Board.Clear();
 
             //Temporary solution to make sure gameboard fits the screen
@@ -222,7 +223,7 @@ namespace HoanGames.ViewModels
                     numOfFlags++;
                 }
             }
-            NumOfFlags = string.Format("{0}/{1}", numOfFlags, NumOfMines);
+            NumOfFlags = string.Format("Flags {0}/{1}", numOfFlags, NumOfMines);
         }
         public void GenerateMines(Cell currentCell)
         {
@@ -261,6 +262,10 @@ namespace HoanGames.ViewModels
                         var rand = new Random();
                         if (rand.Next(101) < 20) //20% chance for each cell to have a mine
                         {
+#if DEBUG
+                            cell.CellText = "M";
+#endif
+
                             cell.HasMine = true;
                             mines--;
                         }
