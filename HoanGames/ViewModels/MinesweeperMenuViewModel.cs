@@ -12,10 +12,8 @@ namespace HoanGames.ViewModels
         public int _heightEntry = 20;
         public int _mineEntry = 40;
         private string _statusMessage;
-        public Command EasyCommand { get; }
-        public Command MediumCommand { get; }
-        public Command HardCommand { get; }
-        public Command CustomCommand { get; }
+        public Command<string> DifficultyCommand { get; }
+        
         public int WidthEntry
         {
             get
@@ -71,79 +69,46 @@ namespace HoanGames.ViewModels
         public MinesweeperMenuViewModel(INavigation navigation)
         {
             Navigation = navigation;
-
-            //Temporary solution, creating separate methods was not working for some reason...
-            //REMOVED: ConfigureAwait(false), because Xamarin had issues with different threads rendering the elements.
-            EasyCommand = new Command(async () =>
-            {
-                Game GameSession = await App.GameRepo.GetGame(); //Check if there is a board record in local database
-                if (GameSession != null)
-                {
-                    await App.GameRepo.UpdateGame(6, 6, 6); //If there is, update it with new board width, height, and number of mines
-                }
-                else
-                {
-                    await App.GameRepo.AddGame(6, 6, 6); //If not, create a new board with the desired numbers
-                }
-
-                await Navigation.PushAsync(new MinesweeperPage()); //Go to Minesweeper page to play the game
-            });
-            MediumCommand = new Command(async () =>
-            {
-                Game GameSession = await App.GameRepo.GetGame();
-                if (GameSession != null)
-                {
-                    await App.GameRepo.UpdateGame(8, 8, 12);
-                }
-                else
-                {
-                    await App.GameRepo.AddGame(8, 8, 12);
-                }
-
-                await Navigation.PushAsync(new MinesweeperPage());
-            });
-            HardCommand = new Command(async () =>
-            {
-                Game GameSession = await App.GameRepo.GetGame();
-                if (GameSession != null)
-                {
-                    await App.GameRepo.UpdateGame(10, 10, 20);
-                }
-                else
-                {
-                    await App.GameRepo.AddGame(10, 10, 20);
-                }
-
-                await Navigation.PushAsync(new MinesweeperPage());
-            });
-            CustomCommand = new Command(async () =>
-            {
-                Game GameSession = await App.GameRepo.GetGame();
-                if (GameSession != null)
-                {
-                    await App.GameRepo.UpdateGame(WidthEntry, HeightEntry, MineEntry);
-                }
-                else
-                {
-                    await App.GameRepo.AddGame(WidthEntry, HeightEntry, MineEntry);
-                }
-
-                await Navigation.PushAsync(new MinesweeperPage());
-            });
+            DifficultyCommand = new Command<string>(SetDifficulty);
         }
-        public async void SetEasy() //Not sure why this would not work
+        public void SetDifficulty(string difficulty) //Not sure why this would not work
         {
-            /*
+            switch (int.Parse(difficulty))
+            {
+                case 0: //Easy
+                    {
+                        SetGame(6, 6, 6);
+                        break;
+                    }
+                case 1: //Medium
+                    {
+                        SetGame(8, 8, 12);
+                        break;
+                    }
+                case 2: //Hard
+                    {
+                        SetGame(10, 10, 20);
+                        break;
+                    }
+                case 3: //Custom
+                    {
+                        SetGame(WidthEntry, HeightEntry, MineEntry);
+                        break;
+                    }
+            }
+        }
+        public async void SetGame(int width, int height, int mines)
+        {
             Game GameSession = await App.GameRepo.GetGame();
             if (GameSession != null)
             {
-                await App.GameRepo.UpdateGame(6, 6);
+                await App.GameRepo.UpdateGame(width, height, mines);
             }
             else
             {
-                await App.GameRepo.AddGame(6, 6);
+                await App.GameRepo.AddGame(width, height, mines);
             }
-            */
+
             await Navigation.PushAsync(new MinesweeperPage()).ConfigureAwait(false);
         }
         public void OnPropertyChanged([CallerMemberName] string name = null)

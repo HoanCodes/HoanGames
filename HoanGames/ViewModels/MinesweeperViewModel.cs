@@ -150,6 +150,7 @@ namespace HoanGames.ViewModels
             else
             {
                 currentCell.IsRevealed = true;
+                currentCell.IsFlagged = false;
                 var AdjacentCells = new List<Cell>();
                 var NumOfAdjacentMines = 0;
 
