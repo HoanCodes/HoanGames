@@ -93,6 +93,16 @@ namespace HoanGames.ViewModels
             }
         }
         public double LayoutHeight { get; set; }
+        private DateTime _gameTime;
+        public DateTime GameTime
+        {
+            get => _gameTime;
+            set
+            {
+                _gameTime = value;
+                OnPropertyChanged();
+            }
+        }
         public int NumOfMoves { get; set; } = 0;
         public Command RevealCellCommand { get; }
         public Command RestartCommand { get; }
@@ -149,8 +159,8 @@ namespace HoanGames.ViewModels
             }
             else
             {
-                currentCell.IsRevealed = true;
                 currentCell.IsFlagged = false;
+                currentCell.IsRevealed = true;
                 var AdjacentCells = new List<Cell>();
                 var NumOfAdjacentMines = 0;
 
