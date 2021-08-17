@@ -1,5 +1,4 @@
-# HoanGames
-Xamarin Minesweeper project created for an interview.
+#Xamarin Minesweeper
 Features:
 - Fully utilizing MVVM architecture with data binding
 - Responsive and intuitive UI design
