@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Text;
+using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -6,10 +9,19 @@ namespace HoanGames
 {
     public partial class App : Application
     {
+        string dbPath => FileAccessHelper.GetLocalFilePath("people.db3");
+        public static PlayerRepository PlayerRepo { get; private set; }
+        public NavigationPage Nav { get; set; }
+
         public App()
         {
             InitializeComponent();
-            MainPage = new NavigationPage(new MainPage());
+
+            PlayerRepo = new PlayerRepository(dbPath);
+
+            Nav = new NavigationPage(new MainPage());
+
+            MainPage = Nav;
         }
 
         protected override void OnStart()

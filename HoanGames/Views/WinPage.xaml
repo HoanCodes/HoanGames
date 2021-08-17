@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="HoanGames.Views.WinPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="You Won!"
+                   FontSize="20"
+                   Margin="0, 40, 0, 0"
+                   VerticalOptions="Start" 
+                   HorizontalOptions="CenterAndExpand" />
+            <Image
+                VerticalOptions="CenterAndExpand"
+                Source="https://clipartmag.com/images/smiley-faces-sunglasses-36.jpg"/>
+            <Button x:Name="btnBack" Text="Go Back"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

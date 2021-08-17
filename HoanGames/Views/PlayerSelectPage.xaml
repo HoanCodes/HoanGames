@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="HoanGames.Views.PlayerSelectPage"
+             Title="Change Player">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout Padding="30" Orientation="Horizontal">
+                <Entry
+                    Text="{Binding NameEntry}"
+                    Placeholder="Add Your Name!"
+                    ReturnCommand="{Binding AddPlayerCommand}"
+                    />
+                <Button 
+                    Text="Add"
+                    HorizontalOptions="End"
+                    Command="{Binding AddPlayerCommand}"
+                    />
+            </StackLayout>
+            
+            <ListView ItemsSource="{Binding PlayerList}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell 
+                            Height="30" 
+                            >
+                            <StackLayout Orientation="Horizontal">
+                                <Label 
+                                    Padding="10"
+                                    FontSize="20"
+                                    VerticalOptions="Center"
+                                    Text="{Binding Name}"
+                                    />
+                                <Button 
+                                    Text="Select"
+                                    HorizontalOptions="EndAndExpand"
+                                    />
+                                <Button 
+                                    Text="Delete"
+                                    HorizontalOptions="End"
+                                    />
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="HoanGames.Views.MinesweeperPage"
+             Padding="20"
+             Title="Minesweeper">
+    <StackLayout>
+        <Button
+            x:Name="btnStart"
+            Text="Restart"
+            Command="{Binding RestartCommand}"
+            />
+        <Grid 
+            x:Name="grid"
+            RowSpacing="0"
+            ColumnSpacing="0"
+            VerticalOptions="FillAndExpand"
+            >
+            
+        </Grid>
+        
+        <Button
+            x:Name="btnFlag"
+            Text="Flag"
+            VerticalOptions="End"
+            Command="{Binding FlagCommand}"
+            />
+    </StackLayout>
+    
+</ContentPage>
+

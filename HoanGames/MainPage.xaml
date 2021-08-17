@@ -5,11 +5,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="HoanGames.MainPage"
-             Padding="40">
+             Padding="40"
+             Title="Main Menu">
 
     <StackLayout>
         <Label
-            Text="Welcome, Hoan!"
+            Text="Welcome!"
             Padding="30"
             FontSize="20"
             HorizontalOptions="CenterAndExpand"

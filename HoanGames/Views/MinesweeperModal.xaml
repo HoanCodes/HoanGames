@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="HoanGames.Views.MinesweeperModal">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout
+            Margin="30, 20, 30, 20"
+            >
+                <Label Text="Choose Difficulty"
+                       FontSize="20"
+                       Margin="0, 20, 0, 20"
+                       VerticalOptions="Start" 
+                       HorizontalOptions="CenterAndExpand" />
+                <Button Text="Easy" x:Name="btnEasy"/>
+                <Button Text="Medium" x:Name="btnMedium"/>
+                <Button Text="Hard" x:Name="btnHard"/>
+                <Button Text="Custom" x:Name="btnCustom"/>
+            </StackLayout>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackLayout Grid.Column="0" HorizontalOptions="CenterAndExpand">
+                    <Label Text="Width (max 10)"/>
+                    <Entry x:Name="width"  Keyboard="Numeric"/>
+                </StackLayout>
+                <StackLayout Grid.Column="1" HorizontalOptions="CenterAndExpand">
+                    <Label Text="Height (max 10)"/>
+                    <Entry x:Name="height"  Keyboard="Numeric"/>
+                </StackLayout>
+                <StackLayout Grid.Column="2" HorizontalOptions="CenterAndExpand">
+                    <Label Text="Mines"/>
+                    <Entry x:Name="numOfMines" Keyboard="Numeric"/>
+                </StackLayout>
+            </Grid>
+            <Label
+                x:Name="statusMessage"
+                TextColor="Red"
+                VerticalOptions="Start" 
+                HorizontalOptions="CenterAndExpand" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
