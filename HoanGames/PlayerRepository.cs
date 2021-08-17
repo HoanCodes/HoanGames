@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using System.Threading.Tasks;
-using HoanGames.Models;
+﻿using HoanGames.Models;
 using SQLite;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HoanGames
 {
     public class PlayerRepository
     {
-        SQLiteAsyncConnection conn;
+        private readonly SQLiteAsyncConnection conn;
         public string StatusMessage { get; set; }
-        
+
         public PlayerRepository(string dbPath)
         {
             conn = new SQLiteAsyncConnection(dbPath);
@@ -21,15 +19,14 @@ namespace HoanGames
 
         public async Task AddPlayer(string name)
         {
-            int result = 0;
-
+            int result;
             try
             {
                 if (string.IsNullOrEmpty(name))
                 {
                     throw new Exception("Valid name, please.");
                 }
-                result = await conn.InsertAsync(new Player() { Name = name });
+                result = await conn.InsertAsync(new Player() { Name = name }).ConfigureAwait(false);
 
                 StatusMessage = string.Format("{0} record(s) added [Name: {1})", result, name);
             }
@@ -49,9 +46,9 @@ namespace HoanGames
                 {
                     throw new Exception("Valid name, please.");
                 }
-                List<Player> playerList = await conn.Table<Player>().ToListAsync();
+                List<Player> playerList = await conn.Table<Player>().ToListAsync().ConfigureAwait(false);
 
-                result = await conn.DeleteAsync(playerList.Find(x => x.Name == name));
+                result = await conn.DeleteAsync(playerList.Find(x => x.Name == name)).ConfigureAwait(false);
 
                 StatusMessage = string.Format("{0} record(s) added [Name: {1})", result, name);
             }
@@ -65,7 +62,7 @@ namespace HoanGames
         {
             try
             {
-                return await conn.Table<Player>().ToListAsync();
+                return await conn.Table<Player>().ToListAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {

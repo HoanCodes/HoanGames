@@ -5,30 +5,100 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="HoanGames.Views.MinesweeperPage"
-             Padding="20"
+             x:Name="Page"
              Title="Minesweeper">
-    <StackLayout>
-        <Button
-            x:Name="btnStart"
-            Text="Restart"
-            Command="{Binding RestartCommand}"
-            />
-        <Grid 
-            x:Name="grid"
-            RowSpacing="0"
-            ColumnSpacing="0"
-            VerticalOptions="FillAndExpand"
+    <ContentPage.Content>
+        <Grid Padding="15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <!--
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="True" IsEnabled="True" Grid.RowSpan="2" Color="Blue"/>
+            -->
+            <CollectionView ItemsSource="{Binding Board}"
+                        WidthRequest="{Binding LayoutWidth}"
+                        HorizontalOptions="Center"
+                            >
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout 
+                        Orientation="Vertical"
+                        Span="{Binding BoardWidth}" 
+                        HorizontalItemSpacing="2"
+                        VerticalItemSpacing="2"
+                                        />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <AbsoluteLayout
+                        >
+                            <Button 
+                            WidthRequest="{Binding Width}"
+                            HeightRequest="{Binding Height}"
+                            IsVisible="{Binding IsVisible}"
+                            IsEnabled="{Binding IsEnabled}"
+                            BackgroundColor="{Binding BgColor}"
+                            Command="{Binding Source={x:Reference Page}, Path=BindingContext.RevealCellCommand}"
+                            CommandParameter="{Binding Id}"
+                        />
+                            <AbsoluteLayout
+                            AbsoluteLayout.LayoutBounds="0.5,0.5,AutoSize,AutoSize"   
+                            AbsoluteLayout.LayoutFlags="XProportional,YProportional" 
+                            >
+                                <Label 
+                                Text="{Binding CellText}"
+                                FontSize="15"
+                                />
+                            </AbsoluteLayout>
+                        </AbsoluteLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Grid
+            Grid.Row="1"
             >
-            
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button
+                Text="{Binding NumOfFlags}"
+                BackgroundColor="Orange"
+                Command="{Binding FlagCommand}"
+                Grid.ColumnSpan="2"
+                />
+                <Button 
+                Text="RE"
+                BackgroundColor="LightGray"
+                Command="{Binding RestartCommand}"
+                Grid.Column="2"
+                />
+                <Button 
+                Text="Timer"
+                BackgroundColor="White"
+                BorderWidth="2"
+                BorderColor="LightGray"
+                Grid.Column="3"
+                />
+            </Grid>
         </Grid>
-        
-        <Button
-            x:Name="btnFlag"
-            Text="Flag"
-            VerticalOptions="End"
-            Command="{Binding FlagCommand}"
-            />
-    </StackLayout>
-    
+    </ContentPage.Content>
 </ContentPage>
-
+    
+    <!--
+    <Grid Padding="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+        -->

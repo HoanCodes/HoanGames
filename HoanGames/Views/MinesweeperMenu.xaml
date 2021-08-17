@@ -4,7 +4,7 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="HoanGames.Views.MinesweeperModal">
+             x:Class="HoanGames.Views.MinesweeperMenu">
     <ContentPage.Content>
         <StackLayout>
             <StackLayout
@@ -15,10 +15,10 @@
                        Margin="0, 20, 0, 20"
                        VerticalOptions="Start" 
                        HorizontalOptions="CenterAndExpand" />
-                <Button Text="Easy" x:Name="btnEasy"/>
-                <Button Text="Medium" x:Name="btnMedium"/>
-                <Button Text="Hard" x:Name="btnHard"/>
-                <Button Text="Custom" x:Name="btnCustom"/>
+                <Button Text="Easy" x:Name="btnEasy" Command="{Binding DifficultyCommand}" CommandParameter="0"/>
+                <Button Text="Medium" x:Name="btnMedium" Command="{Binding DifficultyCommand}" CommandParameter="1"/>
+                <Button Text="Hard" x:Name="btnHard" Command="{Binding DifficultyCommand}" CommandParameter="2"/>
+                <Button Text="Custom" x:Name="btnCustom" Command="{Binding DifficultyCommand}" CommandParameter="3"/>
             </StackLayout>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -27,20 +27,20 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <StackLayout Grid.Column="0" HorizontalOptions="CenterAndExpand">
-                    <Label Text="Width (max 10)"/>
-                    <Entry x:Name="width"  Keyboard="Numeric"/>
+                    <Label Text="Width"/>
+                    <Entry Text="{Binding WidthEntry}"  Keyboard="Numeric"/>
                 </StackLayout>
                 <StackLayout Grid.Column="1" HorizontalOptions="CenterAndExpand">
-                    <Label Text="Height (max 10)"/>
-                    <Entry x:Name="height"  Keyboard="Numeric"/>
+                    <Label Text="Height"/>
+                    <Entry Text="{Binding HeightEntry}"  Keyboard="Numeric"/>
                 </StackLayout>
                 <StackLayout Grid.Column="2" HorizontalOptions="CenterAndExpand">
                     <Label Text="Mines"/>
-                    <Entry x:Name="numOfMines" Keyboard="Numeric"/>
+                    <Entry Text="{Binding MineEntry}" Keyboard="Numeric"/>
                 </StackLayout>
             </Grid>
             <Label
-                x:Name="statusMessage"
+                Text="{Binding StatusMessage}"
                 TextColor="Red"
                 VerticalOptions="Start" 
                 HorizontalOptions="CenterAndExpand" />
