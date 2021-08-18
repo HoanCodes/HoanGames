@@ -248,7 +248,7 @@ namespace HoanGames.ViewModels
                 NumOfMines = (BoardHeight * BoardWidth) - UnavailableCells.Count;
             }
 
-            //Set up mines (brought closer to O(n))
+            //Set up mines (Now done in 1 loop)
             var mines = NumOfMines;
 
             for (int i = 0; i < mines; i++)
