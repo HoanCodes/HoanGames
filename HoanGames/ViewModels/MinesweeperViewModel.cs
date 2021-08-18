@@ -227,8 +227,9 @@ namespace HoanGames.ViewModels
         }
         public void GenerateMines(Cell currentCell)
         {
-            //Makes sure there are no mines around the starting cell
-            var StartingCells = new List<Cell>();
+            var UnavailableCells = new List<int>(); //Keeps track of unavailable cell ids
+
+            //Make sure no mines spawn around starting cells
             for (int i = currentCell.X - 1; i <= currentCell.X + 1; i++)
             {
                 for (int j = currentCell.Y - 1; j <= currentCell.Y + 1; j++)
@@ -236,41 +237,33 @@ namespace HoanGames.ViewModels
                     Cell cellFound = Board.FirstOrDefault(x => x.X == i && x.Y == j);
                     if (cellFound != null)
                     {
-                        StartingCells.Add(cellFound);
+                        UnavailableCells.Add(cellFound.Id);
                     }
                 }
             }
+
             //Check if there is enough space for the requested number of mines, if not, lower NumOfMines.
-            if (NumOfMines > (BoardHeight * BoardWidth) - StartingCells.Count)
+            if (NumOfMines > (BoardHeight * BoardWidth) - UnavailableCells.Count)
             {
-                NumOfMines = (BoardHeight * BoardWidth) - StartingCells.Count;
+                NumOfMines = (BoardHeight * BoardWidth) - UnavailableCells.Count;
             }
 
-            //Set up mines
+            //Set up mines (brought closer to O(n))
             var mines = NumOfMines;
-            while (mines > 0)
+
+            for (int i = 0; i < mines; i++)
             {
-                foreach (Cell cell in Board)
-                {
-                    if (mines <= 0)
-                    {
-                        break;
-                    }
+                var AvailableRange = Enumerable.Range(0, Board.Count).Where(j => !UnavailableCells.Contains(j));
+                var rand = new Random();
 
-                    if (!cell.HasMine && !StartingCells.Contains(cell))
-                    {
-                        var rand = new Random();
-                        if (rand.Next(101) < 20) //20% chance for each cell to have a mine
-                        {
+                var AvailableId = AvailableRange.ElementAt(rand.Next(0, Board.Count - UnavailableCells.Count));
+
+                Cell cellFound = Board.FirstOrDefault(x => x.Id == AvailableId);
+                UnavailableCells.Add(cellFound.Id);
+                cellFound.HasMine = true;
 #if DEBUG
-                            cell.CellText = "M";
+                cellFound.CellText = "M";
 #endif
-
-                            cell.HasMine = true;
-                            mines--;
-                        }
-                    }
-                }
             }
         }
         public void GetFlag()
